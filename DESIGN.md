@@ -85,6 +85,18 @@ These are design decisions, not missing work. They are the reason the kit exists
 - **Drill-down tiles** — `.status-tile` for a state or a band. Opening one puts the step in the hash, so the browser's back button works and a link can be shared.
 - **Tables** — `.results`, with an optional tick column. On a phone the heading row is dropped and every cell carries its own heading through `labelCells()`.
 
+## The three states
+
+A board is always in one of three states, and all three are drawn:
+
+- **Waiting** — a quiet stand-in with the shape of what is coming, so the page does not jump when the real content lands. No spinner: a spinner says "wait" without saying what for.
+- **Ready** — the board.
+- **Failed** — what went wrong, in the source's own words; a line saying what it does *not* mean; and a **Try again** that re-runs the same path rather than reloading the page. An empty board and a board that could not load are different things, and the second one says so.
+
+The failure panel takes focus and is announced, because a page that silently stops is worse than one that says it stopped.
+
+**A table caps at 200 rows and names what it capped.** Showing the first two hundred silently would be showing part of the answer and calling it the answer, which is the thing this board exists not to do. The export still saves everything.
+
 ## The address bar
 
 Two different things, kept apart:

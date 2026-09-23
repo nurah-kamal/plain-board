@@ -160,4 +160,4 @@ const exportRows = exportButton('Export these rows', () => {
 document.querySelector('[aria-labelledby="channel-table-title"] .panel-head').append(exportRows);
 
 setUpFilters(render);
-render();
+startPage(render);

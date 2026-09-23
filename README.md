@@ -63,6 +63,34 @@ node tools/stamp-assets.js
 
 This appends a content hash to every asset link. GitHub Pages lets a browser keep a stylesheet or a script for ten minutes; without this step a visitor can load your new markup beside your old script, and a control that is on screen does nothing. It is the least obvious bug in the whole kit, so the tool exists to make it impossible.
 
+## Connecting your own data
+
+The demo reads a file, so it is ready the moment the page parses. Every page still goes through three states — waiting, ready, failed — because the day you connect a real source is the wrong day to discover that nothing in the interface knows how to say "that did not load".
+
+Replace one function in `assets/js/shared/loading.js`:
+
+```js
+const BoardData = {
+  load() {
+    return fetch('/your/data.json')
+      .then((r) => r.ok ? r.json() : Promise.reject(new Error(`The source answered ${r.status}.`)))
+      .then((rows) => { REQUESTS = rows; });
+  }
+};
+```
+
+Nothing else changes. Every page already calls `startPage(render)`, which hides the content, shows a stand-in, and either renders or shows a failure with a **Try again** button.
+
+See both states on any page:
+
+```bash
+# append to any page's address
+?state=loading
+?state=failed
+```
+
+Tables cap at 200 rows and say what they capped, so a source with fifty thousand rows degrades into a readable page rather than a frozen one.
+
 ## Things worth knowing
 
 **Every script shares one scope.** There is no module system, so two files declaring the same `const` will silently kill a page. Keep names distinct across `shared/` and `pages/`.
@@ -83,7 +111,7 @@ This appends a content hash to every asset link. GitHub Pages lets a browser kee
 index.html               sign in
 pages/                   the signed-in pages, all generated
 assets/css/styles.css    the whole design
-assets/js/shared/        data.js, board.js, app.js (the shell), charts.js, filters.js, session.js, auth.js
+assets/js/shared/        data.js, board.js, app.js (the shell), charts.js, filters.js, loading.js, session.js, auth.js
 assets/js/pages/         one script per page
 tools/build-pages.js     builds every page from one shell
 tools/stamp-assets.js    versions every asset link before a commit

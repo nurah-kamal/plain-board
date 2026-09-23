@@ -178,6 +178,7 @@ ${body}
   <script src="../assets/js/shared/app.js"></script>
   <script src="../assets/js/shared/charts.js"></script>
   <script src="../assets/js/shared/filters.js"></script>
+  <script src="../assets/js/shared/loading.js"></script>
   <script src="../assets/js/pages/${page.script}.js"></script>
 </body>
 </html>

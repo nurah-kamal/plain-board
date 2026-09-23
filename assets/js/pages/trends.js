@@ -147,4 +147,4 @@ buildSegmented(
   }
 );
 
-render();
+startPage(render);

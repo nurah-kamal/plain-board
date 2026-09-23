@@ -63,17 +63,21 @@ function showGrade() {
     body.append(line);
   }
 
-  rows.forEach((request) => {
+  // A real source could hold far more rows than anybody will scroll. Cap it, and
+  // say what was capped rather than quietly showing part of the answer.
+  const SHOWN = 200;
+  rows.slice(0, SHOWN).forEach((request) => {
     const line = create('tr');
 
     const first = create('th', 'cell-name');
     first.scope = 'row';
     first.append(create('b', '', request.id), create('small', '', waitingWords(request.days) + ' ago'));
 
-    const written = create('td');
-    written.append(request.note.trim()
-      ? create('span', '', request.note)
-      : create('span', 'is-empty', 'nothing written'));
+    const written = create('td', 'cell-text');
+    const words = create('span', '', request.note.trim() || 'nothing written');
+    if (!request.note.trim()) words.className = 'is-empty';
+    else written.title = request.note;
+    written.append(words);
 
     line.append(
       first,
@@ -88,6 +92,11 @@ function showGrade() {
   table.append(head, body);
   labelCells(table);
   sortableTable(table);
+
+  const note = document.getElementById('grade-panel').querySelector('.panel-note');
+  note.textContent = rows.length > SHOWN
+    ? `Showing the ${formatNumber(SHOWN)} most recent of ${plural(rows.length, 'note', 'notes')}. Graded on length alone, because length is the only thing the text can honestly be read for.`
+    : 'Graded on length alone, because length is the only thing the text can honestly be read for. A short note is not bad work — it is a note the next person cannot use.';
 }
 
 function render() {
@@ -140,4 +149,4 @@ document.getElementById('grade-panel').querySelector('.panel-head').append(expor
 
 setUpFilters(() => readUrl(false));
 Trail.watch(() => readUrl(true));
-readUrl(false);
+startPage(() => readUrl(false));

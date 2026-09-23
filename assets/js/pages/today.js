@@ -167,4 +167,4 @@ function render() {
 }
 
 setUpFilters(render);
-render();
+startPage(render);

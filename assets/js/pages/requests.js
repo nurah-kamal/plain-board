@@ -78,7 +78,9 @@ function showBand() {
     body.append(line);
   }
 
-  rows.forEach((request) => {
+  // Same cap as everywhere else: show what can be read, name what was left out.
+  const SHOWN = 200;
+  rows.slice(0, SHOWN).forEach((request) => {
     const line = create('tr');
 
     const first = create('th', 'cell-name');
@@ -106,6 +108,11 @@ function showBand() {
   labelCells(table);
   sortableTable(table);
   showPicked();
+
+  const note = document.getElementById('waiting-panel').querySelector('.panel-note');
+  note.textContent = rows.length > SHOWN
+    ? `Showing the ${formatNumber(SHOWN)} that have waited longest, of ${plural(rows.length, 'request', 'requests')}. Export saves all of them.`
+    : 'Longest wait first. Waiting is counted from the day the request arrived to today; it does not prove nobody replied, only that nobody wrote it down.';
 }
 
 function render() {
@@ -151,4 +158,4 @@ document.getElementById('waiting-panel').querySelector('.panel-head').append(exp
 
 setUpFilters(() => readUrl(false));
 Trail.watch(() => readUrl(true));
-readUrl(false);
+startPage(() => readUrl(false));

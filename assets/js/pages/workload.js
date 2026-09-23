@@ -115,4 +115,4 @@ const exportRows = exportButton('Export these rows', () => {
 });
 document.querySelector('[aria-labelledby="rings-title"] .panel-head').append(exportRows);
 
-render();
+startPage(render);

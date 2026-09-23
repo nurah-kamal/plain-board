@@ -1049,6 +1049,37 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
 .menu-item.is-shut:hover { background: none; }
 .menu-item.is-shut .tag { margin-left: auto; }
 
+/* Real data has long values in it. A single 80-character product name used to
+   stretch its select across the whole filter bar and squeeze the search to nothing. */
+.controls .select { max-width: 260px; min-width: 0; }
+.controls .search { min-width: 0; }
+
+/* A long note used to starve every other column in the table. Cells wrap rather
+   than push, and a very long one is clamped with the whole text on hover. */
+.results td, .results th { overflow-wrap: anywhere; }
+.results .cell-text { max-width: 34ch; }
+.results .cell-text span {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.results .cell-name { min-width: 12ch; }
+
+/* Waiting for data, and failing to get it. */
+.state-waiting { display: flex; flex-direction: column; gap: 22px; }
+.skeleton-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.skeleton-tile { height: 132px; border-radius: var(--radius); background: var(--card); border: 1px solid var(--line); }
+.skeleton-panel { height: 280px; border-radius: var(--radius); background: var(--card); border: 1px solid var(--line); }
+.skeleton-tile, .skeleton-panel { animation: settle 1.4s ease-in-out infinite; }
+@keyframes settle { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .skeleton-tile, .skeleton-panel { animation: none; opacity: .75; } }
+@media (max-width: 900px) { .skeleton-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.state-failed { border-color: var(--red-line); }
+.state-failed .panel-head h2 { color: var(--red-ink); }
+.state-actions { margin-top: 4px; }
+
 /* One elevation, not two. A surface is defined by a hairline; the shadow is gone,
    because a 1px border under a soft shadow is the ghost-card look. */
 .panel, .tile, .status-tile { border: 1px solid var(--line); box-shadow: none; }

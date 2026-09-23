@@ -304,6 +304,38 @@ fill('state-list', [
     })(),
     "movement(now, before, { good: 'up' })\n// under a base of 5 it reads '2 to 8' instead of '+300%'"),
 
+  demo('Waiting for data', 'A stand-in with the shape of what is coming, so the page does not jump when it lands. No spinner — a spinner says "wait" without saying what for.',
+    (() => {
+      const holder = create('div', 'state-waiting');
+      const bars = create('div', 'skeleton-tiles');
+      for (let i = 0; i < 4; i++) bars.append(create('div', 'skeleton-tile'));
+      holder.append(bars);
+      return holder;
+    })(),
+    "startPage(render)  // shared/loading.js\n// see it on any page: ?state=loading"),
+
+  demo('Could not read its data', 'What went wrong, what it does not mean, and the way out. An empty board and a board that failed to load are different things, and saying so is the whole point.',
+    (() => {
+      const panel = create('section', 'panel state-failed');
+      const head = create('div', 'panel-head');
+      head.append(create('h2', '', 'This board could not read its data'));
+      panel.append(head, create('p', '', 'The source did not answer.'));
+      panel.append(create('p', 'panel-note', 'Nothing on this page is out of date, because nothing on this page was drawn.'));
+      const again = create('button', 'button button-secondary button-inline');
+      again.type = 'button';
+      again.append(icon(ICONS.refresh, 16), document.createTextNode('Try again'));
+      const tools = create('div', 'state-actions');
+      tools.append(again);
+      panel.append(tools);
+      return panel;
+    })(),
+    "// BoardData.load() returns a promise.\n// Replace it with a real fetch and nothing else changes.\n// see it on any page: ?state=failed"),
+
+  demo('More rows than anybody will read',
+    'A cap, and a line saying what was capped. Showing the first two hundred silently would be showing part of the answer and calling it the answer.',
+    create('p', 'panel-note', 'Showing the 200 that have waited longest, of 405 requests. Export saves all of them.'),
+    "rows.slice(0, 200)  // and say so in the panel note"),
+
   demo('A page somebody may not open', 'It stays in the menu, labelled, rather than vanishing. The redirect in session.js is what enforces it.',
     (() => {
       const holder = create('div', 'demo-menu');

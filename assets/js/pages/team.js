@@ -150,4 +150,4 @@ document.querySelector('.panel-head').append(exportRows);
 setUpFilters(render);
 Trail.watch(() => { readNameFromUrl(); render(); });
 readNameFromUrl();
-render();
+startPage(render);
