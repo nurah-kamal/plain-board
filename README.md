@@ -6,7 +6,7 @@ No framework. No build step. No dependencies. No chart library. Copy the folder,
 
 **Live demo:** https://nurah-kamal.github.io/plain-board/
 
-The demo is a help desk board: ten pages across four menu groups, every chart in the kit drawn at least once, and 129 invented requests behind all of it. Choose **Look around as a manager** or **Look around as a team member** — no account needed, and nothing is saved beyond your own browser.
+The demo is a help desk board: twelve pages across five menu groups, every chart in the kit drawn at least once, and 129 invented requests behind all of it. Choose **Look around as a manager** or **Look around as a team member** — no account needed, and nothing is saved beyond your own browser.
 
 Sign in as a team member and the menu changes: their own name is locked into the person filter, and the manager-only page stays visible but shut, labelled rather than hidden.
 

@@ -4,7 +4,11 @@ One design, written down so it can be followed rather than guessed at. If you co
 
 ## Colour
 
-Colours live as custom properties on `:root` in `assets/css/styles.css`, redefined once under `@media (prefers-color-scheme: dark)`. Nothing in the stylesheet uses a raw colour value. If you need a new colour, it becomes a token first.
+Colours live as custom properties on `:root` in `assets/css/styles.css`. Nothing in the stylesheet uses a raw colour value; if you need a new colour, it becomes a token first.
+
+Because the theme can be chosen as well as inherited, the dark values are declared **twice**: once inside `@media (prefers-color-scheme: dark)`, guarded as `:root:not([data-theme="light"])` so a chosen light theme beats a dark machine, and once as `:root[data-theme="dark"]` so a chosen dark theme beats a light one. Three states have to work — light chosen, dark chosen, and nothing chosen. A token added to only one of those blocks is the bug this arrangement invites, so add it to both.
+
+The two `theme-color` meta tags in every page head carry the same two grounds, so the browser's own bar matches the page it sits above.
 
 | Token | Light | Dark | Used for |
 | --- | --- | --- | --- |
