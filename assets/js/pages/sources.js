@@ -1,52 +1,48 @@
 setUpShell();
 
 // A board that cannot say where its figures came from is worth very little, so this
-// page is part of the kit rather than an afterthought. Replace the three lists below
-// with the truth about your own board.
+// page is part of the kit rather than an afterthought. Replace the lists below with
+// the truth about your own board. The counting rules live on Reading rules.
 
 const SOURCES = [
   {
     name: 'Request log',
     detail: 'One row per request, with the product, the channel, the person it was assigned to and anything they wrote.',
-    read: `Read at ${SNAPSHOT.read}`,
-    note: 'Sample data. Nothing is connected.'
+    note: `Read at ${SNAPSHOT.read} · sample data, nothing is connected`
   },
   {
     name: 'People list',
     detail: 'Who is on the service desk, so a request can be counted against somebody.',
-    read: `Read at ${SNAPSHOT.read}`,
-    note: 'Sample data. Nothing is connected.'
+    note: `Read at ${SNAPSHOT.read} · sample data, nothing is connected`
   },
   {
     name: 'Product list',
     detail: 'The three products a request can be about, and the colour each one keeps across every chart.',
-    read: `Read at ${SNAPSHOT.read}`,
-    note: 'Sample data. Nothing is connected.'
+    note: `Read at ${SNAPSHOT.read} · sample data, nothing is connected`
   }
 ];
 
-const COUNTING = [
-  {
-    name: 'A request',
-    detail: 'One row in the log, counted once, on the day it arrived.'
-  },
-  {
-    name: 'Something recorded',
-    detail: 'A status, a note or a recorded reply on the row. It does not prove the customer was reached, or that the reply helped.'
-  },
-  {
-    name: 'Hours to first reply',
-    detail: 'The middle value, not the average, so one very slow request cannot drag it. Only rows carrying a recorded reply can be measured at all.'
-  },
-  {
-    name: 'Waiting',
-    detail: 'From the day the request arrived to today, for rows with nothing recorded. It does not prove nobody replied — it proves nobody wrote it down.'
-  },
-  {
-    name: 'Note quality',
-    detail: 'Measured on length alone: whether the next person could pick the request up. Nothing here judges the work.'
-  }
-];
+function coverage() {
+  const open = unanswered(REQUESTS);
+  const graded = replied(REQUESTS);
+  return [
+    {
+      name: 'How far back',
+      detail: `${SNAPSHOT.days} days, or twelve whole weeks, ending ${SNAPSHOT.read.toLowerCase()}.`,
+      note: 'The longest period the board offers is the whole span, so it has nothing earlier to compare against.'
+    },
+    {
+      name: 'How much',
+      detail: `${plural(REQUESTS.length, 'request', 'requests')} across ${plural(PEOPLE.length, 'person', 'people')}, ${plural(Object.keys(PRODUCTS).length, 'product', 'products')} and ${plural(CHANNELS.length, 'channel', 'channels')}.`,
+      note: 'Every figure on every page is worked out from these rows and nothing else.'
+    },
+    {
+      name: 'How complete',
+      detail: `${plural(graded.length, 'request has', 'requests have')} a recorded reply. ${plural(open.length, 'has', 'have')} nothing written against them.`,
+      note: 'The measures about speed can only be worked out on the first group. The second group is reported as its own figure rather than folded in.'
+    }
+  ];
+}
 
 const GAPS = [
   {
@@ -59,20 +55,23 @@ const GAPS = [
   },
   {
     name: 'Whether the reply was any good',
-    detail: 'The board counts what was written down. That is all it can see.'
+    detail: 'The board counts what was written down, and grades it on length. That is the whole of what it can see.'
+  },
+  {
+    name: 'How much work a request was',
+    detail: 'One request can be five minutes or a fortnight. Nothing here records effort, so no count on this board should be read as a measure of how hard somebody is working.'
   }
 ];
 
-function showList(id, items, withRead) {
-  const list = document.getElementById(id);
-  list.replaceChildren(...items.map((item) => {
+function showList(id, items) {
+  document.getElementById(id).replaceChildren(...items.map((item) => {
     const line = create('li');
     line.append(create('b', '', item.name), create('span', '', item.detail));
-    if (withRead && item.read) line.append(create('small', '', `${item.read} · ${item.note}`));
+    if (item.note) line.append(create('small', '', item.note));
     return line;
   }));
 }
 
-showList('source-list', SOURCES, true);
-showList('counting-list', COUNTING, false);
-showList('gap-list', GAPS, false);
+showList('source-list', SOURCES);
+showList('coverage-list', coverage());
+showList('gap-list', GAPS);

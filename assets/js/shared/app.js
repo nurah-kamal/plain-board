@@ -519,6 +519,20 @@ function buildFooter() {
   main.append(create('p', 'page-foot', BOARD.footer));
 }
 
+// Pages a viewer may not open stay in the menu, labelled, rather than quietly
+// disappearing. Hiding them would leave somebody wondering what they are missing;
+// the redirect in session.js is what actually enforces it.
+function markClosedPages(sidebar, user) {
+  if (user.manager) return;
+  sidebar.querySelectorAll('.menu-item[data-access="manager"]').forEach((item) => {
+    const shut = create('span', 'menu-item is-shut');
+    shut.append(...item.childNodes);
+    shut.append(create('span', 'tag', 'Managers'));
+    shut.title = 'Only a manager can open this page.';
+    item.replaceWith(shut);
+  });
+}
+
 function markCurrentPage(sidebar) {
   const here = location.pathname.split('/').pop() || BOARD.home;
   sidebar.querySelectorAll('.menu-item').forEach((item) => {
@@ -569,6 +583,7 @@ function setUpShell() {
   });
 
   markCurrentPage(sidebar);
+  markClosedPages(sidebar, user);
   buildRelatedLinks(sidebar);
   buildStateCard(sidebar);
   buildHeaderTools();

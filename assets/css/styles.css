@@ -960,6 +960,10 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
   * { transition: none !important; }
 }
 
+.menu-item.is-shut { color: var(--muted); cursor: default; opacity: .72; }
+.menu-item.is-shut:hover { background: none; }
+.menu-item.is-shut .tag { margin-left: auto; }
+
 /* Lists and tiles used by the board pages */
 .tiles-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .span-6 { grid-column: span 6; }

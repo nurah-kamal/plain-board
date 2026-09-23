@@ -23,6 +23,19 @@ function currentRows() {
       || `${request.id} ${request.person} ${request.channel} ${PRODUCTS[request.product]} ${request.note}`.toLowerCase().includes(search));
 }
 
+// The same selection over the period immediately before this one. A page asks
+// hasPrevious(filterState.range) first: on the longest range the board reaches the
+// start of its own data, and there is honestly nothing behind it.
+function previousRows() {
+  const search = filterState.search.trim().toLowerCase();
+  return matchingBefore(filterState.range, filterState.product, filterState.person)
+    .filter((request) => !search
+      || `${request.id} ${request.person} ${request.channel} ${PRODUCTS[request.product]} ${request.note}`.toLowerCase().includes(search));
+}
+
+// What to say wherever a comparison cannot be drawn.
+const noComparison = () => `No earlier ${rangeLabel().toLowerCase()} to compare with — the board starts here.`;
+
 function activeFilters() {
   return [
     filterState.product !== 'All' ? PRODUCTS[filterState.product] : null,

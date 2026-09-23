@@ -113,8 +113,7 @@ function showChannels(rows) {
 }
 
 function showArrivals() {
-  const points = ARRIVALS.map((value, index) => ({ label: `Day ${index + 1}`, value }));
-  document.getElementById('arrivals-chart').replaceChildren(areaChart(points, { label: 'requests', key: 'Requests arriving' }));
+  document.getElementById('arrivals-chart').replaceChildren(areaChart(ARRIVALS, { label: 'requests', key: 'Requests arriving' }));
 }
 
 function showNotes(rows) {

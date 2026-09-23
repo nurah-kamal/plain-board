@@ -72,7 +72,7 @@ const BOARD = {
           group: 'Channel',
           label: channel,
           detail: plural(REQUESTS.filter((request) => request.channel === channel).length, 'request', 'requests'),
-          href: `today.html#channels`
+          href: `channels.html`
         });
       }
     });
