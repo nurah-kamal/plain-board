@@ -93,23 +93,24 @@ function showTable() {
     first.scope = 'row';
     first.append(create('b', '', week.label));
 
-    const waiting = create('td', 'cell-number');
+    const waiting = numberCell('', week.waiting);
     waiting.append(statusChip({ tone: week.waiting > 2 ? 'changed' : week.waiting ? 'waiting' : 'good', text: formatNumber(week.waiting) }));
 
     line.append(
       first,
-      create('td', 'cell-number', formatNumber(week.opened)),
-      create('td', 'cell-number', formatNumber(week.answered)),
+      numberCell(formatNumber(week.opened), week.opened),
+      numberCell(formatNumber(week.answered), week.answered),
       waiting,
-      create('td', 'cell-number', week.sameDay === null ? '—' : formatPercent(week.sameDay)),
-      create('td', 'cell-number', week.hoursToReply === null ? '—' : formatHours(week.hoursToReply)),
-      create('td', 'cell-number', formatNumber(week.fullNotes))
+      numberCell(week.sameDay === null ? '—' : formatPercent(week.sameDay), week.sameDay === null ? -1 : week.sameDay),
+      numberCell(week.hoursToReply === null ? '—' : formatHours(week.hoursToReply), week.hoursToReply === null ? -1 : week.hoursToReply),
+      numberCell(formatNumber(week.fullNotes), week.fullNotes)
     );
     body.append(line);
   });
 
   table.append(head, body);
   labelCells(table);
+  sortableTable(table);
 }
 
 function render() {

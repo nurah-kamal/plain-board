@@ -104,7 +104,7 @@ function showTable(rows) {
       first.append(open);
     }
 
-    const waiting = create('td', 'cell-number');
+    const waiting = numberCell('', figures.waiting);
     waiting.append(statusChip({
       tone: figures.overAWeek ? 'changed' : figures.waiting ? 'waiting' : 'good',
       text: formatNumber(figures.waiting)
@@ -112,17 +112,18 @@ function showTable(rows) {
 
     line.append(
       first,
-      create('td', 'cell-number', formatNumber(figures.given)),
-      create('td', 'cell-number', figures.given ? formatPercent(figures.answered / figures.given) : '—'),
+      numberCell(formatNumber(figures.given), figures.given),
+      numberCell(figures.given ? formatPercent(figures.answered / figures.given) : '—', figures.given ? figures.answered / figures.given : -1),
       waiting,
-      create('td', 'cell-number', figures.middle === null ? '—' : formatHours(figures.middle)),
-      create('td', 'cell-number', formatNumber(figures.full))
+      numberCell(figures.middle === null ? '—' : formatHours(figures.middle), figures.middle === null ? -1 : figures.middle),
+      numberCell(formatNumber(figures.full), figures.full)
     );
     body.append(line);
   });
 
   table.append(head, body);
   labelCells(table);
+  sortableTable(table);
 }
 
 function render() {

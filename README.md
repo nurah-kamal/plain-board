@@ -25,7 +25,9 @@ It is also opinionated about one thing: **a figure should say what it does not p
 | **Tables** | Row ticking with export of only the ticked rows, and cells that carry their own heading on a phone |
 | **Controls** | Segmented period picker, filter bar, drill-down tiles with the step kept in the address bar |
 | **Tooling** | One script to build every page from a single shell, one to version assets before a commit |
-| **Both themes** | Light and dark, defined once as tokens |
+| **Both themes** | Light and dark, defined once as tokens, with a switch in the menu — and a third setting that follows the device |
+
+Every one of these is drawn on the demo's **Components** page, with the call that drew it underneath. That is the fastest way to see what is in the box.
 
 ## Try it on your own machine
 
@@ -69,7 +71,11 @@ This appends a content hash to every asset link. GitHub Pages lets a browser kee
 
 **The demo sign-in is a demonstration.** It remembers a sample person in `localStorage` and nothing more. Replace `assets/js/shared/session.js` when you connect real accounts, and do not treat the manager/member split as a security boundary — it decides what is drawn, not what is allowed.
 
-**Roles are drawn, not hidden.** A team member's person filter is set to their own name and locked, rather than removed. Showing the rule reads better than quietly leaving a control out.
+**Roles are drawn, not hidden.** A team member's person filter is set to their own name and locked, rather than removed, and a manager-only page stays in their menu labelled **Managers** rather than vanishing. Showing the rule reads better than quietly leaving a control out — and a link that silently bounces somebody is worse than either.
+
+**A figure formatted for reading does not sort the way it reads.** `1d` is longer than `20h` but sorts before it on text, so a formatted cell carries its raw value: `numberCell('1d', 26)`. Then `sortableTable(table)` makes every heading clickable.
+
+**A percentage off a tiny base is not information.** Two requests becoming eight is not a 300% improvement, it is six requests. Below a base of five, `movement()` prints `2 to 8` instead.
 
 ## Folders
 

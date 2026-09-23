@@ -98,11 +98,11 @@ function showTable(rows, before, comparable) {
     first.scope = 'row';
     first.append(create('b', '', channel));
 
-    const changeCell = create('td', 'cell-number');
+    const changeCell = numberCell('', earlier ? own.length - earlier : -9999);
     if (change) changeCell.append(statusChip(change));
     else changeCell.append(create('span', 'is-empty', '—'));
 
-    const waitingCell = create('td', 'cell-number');
+    const waitingCell = numberCell('', waiting.length);
     waitingCell.append(statusChip({
       tone: waiting.length ? 'waiting' : 'good',
       text: formatNumber(waiting.length)
@@ -110,17 +110,18 @@ function showTable(rows, before, comparable) {
 
     line.append(
       first,
-      create('td', 'cell-number', formatNumber(own.length)),
+      numberCell(formatNumber(own.length), own.length),
       changeCell,
-      create('td', 'cell-number', own.length ? formatPercent(answered.length / own.length) : '—'),
+      numberCell(own.length ? formatPercent(answered.length / own.length) : '—', own.length ? answered.length / own.length : -1),
       waitingCell,
-      create('td', 'cell-number', middle === null ? '—' : formatHours(middle))
+      numberCell(middle === null ? '—' : formatHours(middle), middle === null ? -1 : middle)
     );
     body.append(line);
   });
 
   table.append(head, body);
   labelCells(table);
+  sortableTable(table);
 }
 
 function render() {

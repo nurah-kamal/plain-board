@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#F1F6F3" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0A130F" media="(prefers-color-scheme: dark)">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta name="description" content="Where support requests arrive and how each channel is doing.">
-  <title>Channels · Help desk</title>
+  <meta name="description" content="Every chart, control and state the kit ships.">
+  <title>Components · Help desk</title>
   <link rel="icon" href="../assets/img/logo.svg?v=64898787" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,7 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M14.5 3.5V8H19"/><path d="M8.5 13h7M8.5 16.5h4"/></svg>
           <span>Note quality</span>
         </a>
-        <a class="menu-item" href="channels.html" aria-current="page">
+        <a class="menu-item" href="channels.html">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h16M4 12h16M4 16.5h10"/><circle cx="18.5" cy="16.5" r="2"/></svg>
           <span>Channels</span>
         </a>
@@ -68,7 +68,7 @@
           <span>Reading rules</span>
         </a>
         <p class="menu-label">The kit</p>
-        <a class="menu-item" href="components.html">
+        <a class="menu-item" href="components.html" aria-current="page">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><circle cx="17" cy="17" r="3.5"/></svg>
           <span>Components</span>
         </a>
@@ -96,53 +96,49 @@
       <main class="app-main" id="main" tabindex="-1">
         <div class="page-header">
           <div>
-            <h1>Channels</h1>
-            <p class="page-note">Where requests arrive, and how each channel compares with the period before.</p>
+            <h1>Components</h1>
+            <p class="page-note">Every part the kit ships, drawn once, with the call that drew it.</p>
           </div>
         </div>
 
-        <div class="controls">
-          <div class="segmented segmented-three" id="range-picker" role="group" aria-label="Period"></div>
-          <label class="sr-only" for="product-filter">Product</label>
-          <select class="select" id="product-filter"></select>
-          <label class="sr-only" for="person-filter">Person</label>
-          <select class="select" id="person-filter"></select>
-          <label class="sr-only" for="row-search">Search the requests</label>
-          <input class="search" id="row-search" type="search" placeholder="Search a person, a product or a request" autocomplete="off">
-          <button class="button button-secondary button-inline" id="filters-clear" type="button" hidden>Show everything</button>
-        </div>
+        <p class="panel-note">Everything below is drawn with its own made-up numbers, so it can be judged on how it looks rather than on whatever the demo data happens to say today. The call that drew each one is underneath it.</p>
 
-        <p class="panel-note" id="filter-note"></p>
+        <section class="panel" aria-labelledby="charts-title">
+          <div class="panel-head">
+            <h2 id="charts-title">Charts</h2>
+          </div>
+          <p class="panel-note">Drawn in SVG by <code>assets/js/shared/charts.js</code>. No charting library is loaded — the content security policy would not allow one.</p>
+          <ul class="demo-list" id="chart-list"></ul>
+        </section>
 
-        <section class="tiles" id="tiles" aria-label="Channels"></section>
+        <section class="panel" aria-labelledby="figures-title">
+          <div class="panel-head">
+            <h2 id="figures-title">Figures and states</h2>
+          </div>
+          <ul class="demo-list" id="tile-list"></ul>
+        </section>
 
-        <div class="grid">
-          <section class="panel span-7" aria-labelledby="compare-title">
-            <div class="panel-head">
-              <h2 id="compare-title">Against the period before</h2>
-            </div>
-            <div id="compare-chart"></div>
-            <p class="panel-note" id="compare-note"></p>
-          </section>
+        <section class="panel" aria-labelledby="controls-title">
+          <div class="panel-head">
+            <h2 id="controls-title">Controls</h2>
+          </div>
+          <ul class="demo-list" id="control-list"></ul>
+        </section>
 
-          <section class="panel span-5" aria-labelledby="share-title">
-            <div class="panel-head">
-              <h2 id="share-title">Share of the selection</h2>
-            </div>
-            <div id="share-chart"></div>
-            <p class="panel-note">Every request counted once, against the channel it arrived on.</p>
-          </section>
+        <section class="panel" aria-labelledby="tables-title">
+          <div class="panel-head">
+            <h2 id="tables-title">Tables</h2>
+          </div>
+          <ul class="demo-list" id="table-list"></ul>
+        </section>
 
-          <section class="panel span-12" aria-labelledby="channel-table-title">
-            <div class="panel-head">
-              <h2 id="channel-table-title">Every channel</h2>
-            </div>
-            <div class="table-wrap">
-              <table class="results" id="channel-table"></table>
-            </div>
-            <p class="panel-note">A channel with nothing in this selection is left out rather than shown as a zero.</p>
-          </section>
-        </div>
+        <section class="panel" aria-labelledby="honest-title">
+          <div class="panel-head">
+            <h2 id="honest-title">The honest states</h2>
+          </div>
+          <p class="panel-note">The parts that stop the board overclaiming. These are the ones worth copying even if you take nothing else.</p>
+          <ul class="demo-list" id="state-list"></ul>
+        </section>
       </main>
     </div>
   </div>
@@ -154,6 +150,6 @@
   <script src="../assets/js/shared/app.js?v=0556b200"></script>
   <script src="../assets/js/shared/charts.js?v=dde69a4e"></script>
   <script src="../assets/js/shared/filters.js?v=edf5cbac"></script>
-  <script src="../assets/js/pages/channels.js?v=a131f0bb"></script>
+  <script src="../assets/js/pages/components.js?v=abb4306d"></script>
 </body>
 </html>

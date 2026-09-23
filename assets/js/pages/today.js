@@ -47,21 +47,39 @@ function showStart(rows) {
 function showTiles(rows) {
   const answered = replied(rows);
   const waiting = unanswered(rows);
-  const sameDay = answered.filter((request) => request.reply <= 24).length;
+  const sameDay = answeredWithinADay(rows).length;
   const middle = median(answered.map((request) => request.reply));
+
+  // The same selection, one period earlier. On the longest period the board reaches
+  // the start of its own data, so there is nothing honest to compare against and the
+  // tiles simply go without a chip.
+  const comparable = hasPrevious(filterState.range);
+  const before = comparable ? previousRows() : [];
+  const beforeAnswered = replied(before);
+  const beforeSameDay = answeredWithinADay(before).length;
+  const beforeMiddle = median(beforeAnswered.map((request) => request.reply));
+  const since = ` on the previous ${rangeLabel().toLowerCase()}`;
+
+  // A share has to be compared as a share, not as a count of the rows behind it.
+  const shareNow = answered.length ? Math.round((sameDay / answered.length) * 100) : null;
+  const shareBefore = beforeAnswered.length ? Math.round((beforeSameDay / beforeAnswered.length) * 100) : null;
 
   const tiles = [
     {
       label: 'Requests', icon: ICONS.rows, tone: 'is-info',
       value: formatNumber(rows.length),
+      change: comparable ? movement(rows.length, before.length, { good: 'up', suffix: since }) : null,
       note: `${plural(new Set(rows.map((request) => request.person)).size, 'person', 'people')} · ${plural(new Set(rows.map((request) => request.channel)).size, 'channel', 'channels')}`,
       spark: TRENDS.opened,
       sparkLabel: 'Requests opened in each of the last six weeks',
-      about: 'One row per request, counted once. It is what the board holds, not what was sent — nothing here checks that every request arrived.'
+      about: 'One row per request, counted once. It is what the board holds, not what was sent — nothing here checks that every request arrived. The change compares this period with the same length of time immediately before it.'
     },
     {
       label: 'Answered within a day', icon: ICONS.check, tone: 'is-good',
-      value: answered.length ? formatPercent(sameDay / answered.length) : '—',
+      value: shareNow === null ? '—' : `${shareNow}%`,
+      change: comparable && shareNow !== null && shareBefore !== null
+        ? movement(shareNow, shareBefore, { good: 'up', suffix: since })
+        : null,
       note: answered.length ? `${formatNumber(sameDay)} of ${formatNumber(answered.length)} with a reply recorded` : 'nothing recorded to measure',
       spark: TRENDS.answeredSameDay,
       sparkLabel: 'Share answered within a day, over the last six weeks',
@@ -70,14 +88,18 @@ function showTiles(rows) {
     {
       label: 'Nothing recorded', icon: ICONS.alert, tone: 'is-warn',
       value: formatNumber(waiting.length),
+      change: comparable ? movement(waiting.length, unanswered(before).length, { good: 'down', suffix: since }) : null,
       note: waiting.length ? `longest has waited ${waitingWords(Math.max(...waiting.map((request) => request.days))).toLowerCase()}` : 'everything has a reply recorded',
       spark: TRENDS.waiting,
       sparkLabel: 'Requests with nothing recorded, over the last six weeks',
-      about: 'Requests with no reply written against them. It does not prove nobody replied — only that nobody wrote it down.'
+      about: 'Requests with no reply written against them. It does not prove nobody replied — only that nobody wrote it down. A recent period always looks worse, because there has been less time for anybody to write anything.'
     },
     {
       label: 'Hours to first reply', icon: ICONS.clock, tone: 'is-info',
       value: middle === null ? '—' : formatHours(middle),
+      change: comparable && middle !== null && beforeMiddle !== null
+        ? movement(middle, beforeMiddle, { good: 'down', suffix: since })
+        : null,
       note: 'the middle value, not the average',
       spark: TRENDS.hoursToReply,
       sparkLabel: 'Middle hours to a first reply, over the last six weeks',

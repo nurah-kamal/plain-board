@@ -75,6 +75,10 @@ function icon(paths, size = 18) {
 }
 
 const ICONS = {
+  sun: ['M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7', 'M12 2.5v2', 'M12 19.5v2', 'M4.2 4.2l1.4 1.4', 'M18.4 18.4l1.4 1.4', 'M2.5 12h2', 'M19.5 12h2', 'M4.2 19.8l1.4-1.4', 'M18.4 5.6l1.4-1.4'],
+  moon: ['M20 14.5A8.5 8.5 0 1 1 9.5 4a6.6 6.6 0 0 0 10.5 10.5z'],
+  auto: ['M3.5 5.5h17v11h-17z', 'M9 20h6', 'M12 16.5V20'],
+  sort: ['M8 5.5v13', 'M5 9l3-3.5L11 9', 'M16 18.5v-13', 'M13 15l3 3.5 3-3.5'],
   check: ['M4 12.5l5 5L20 6.5'],
   back: ['M19 12H5', 'M11 18l-6-6 6-6'],
   refresh: ['M20 11a8 8 0 0 0-13.7-5.6L3 8', 'M4 13a8 8 0 0 0 13.7 5.6L21 16', 'M3 4v4h4', 'M21 20v-4h-4'],
@@ -155,6 +159,78 @@ function labelCells(table) {
       if (headings[index]) cell.dataset.label = headings[index];
     });
   });
+}
+
+// A figure formatted for reading does not sort the way it reads: "1d" is longer than
+// "20h" but sorts before it on text. Where a column is formatted, the cell carries the
+// raw number in data-sort and the sorter uses that instead.
+function numberCell(text, sortValue) {
+  const cell = create('td', 'cell-number', text);
+  if (sortValue !== undefined && sortValue !== null) cell.dataset.sort = String(sortValue);
+  return cell;
+}
+
+function sortValueOf(cell) {
+  if (!cell) return '';
+  if (cell.dataset && cell.dataset.sort !== undefined) {
+    const exact = Number(cell.dataset.sort);
+    return Number.isNaN(exact) ? cell.dataset.sort.toLowerCase() : exact;
+  }
+  const text = cell.textContent.trim();
+  const number = Number(text.replace(/[^0-9.-]/g, ''));
+  return /[0-9]/.test(text) && !Number.isNaN(number) ? number : text.toLowerCase();
+}
+
+// Which column each table is sorted by, kept between redraws so changing a filter
+// does not quietly throw the reader's chosen order away.
+const tableSort = {};
+
+function sortableTable(table) {
+  const body = table.tBodies[0];
+  if (!body || !body.rows.length || body.querySelector('.is-empty')) return;
+
+  const state = tableSort[table.id] || (tableSort[table.id] = { index: null, direction: 1 });
+  const heads = [...table.querySelectorAll('thead th')];
+
+  const apply = () => {
+    heads.forEach((head, index) => {
+      if (head.classList.contains('cell-pick')) return;
+      head.setAttribute('aria-sort', index === state.index ? (state.direction === 1 ? 'ascending' : 'descending') : 'none');
+      head.classList.toggle('is-sorted', index === state.index);
+    });
+    if (state.index === null) return;
+
+    const sorted = [...body.rows].sort((a, b) => {
+      const left = sortValueOf(a.children[state.index]);
+      const right = sortValueOf(b.children[state.index]);
+      if (left === right) return 0;
+      return (left > right ? 1 : -1) * state.direction;
+    });
+    body.append(...sorted);
+  };
+
+  heads.forEach((head, index) => {
+    if (head.classList.contains('cell-pick') || !head.textContent.trim()) return;
+
+    const label = head.textContent;
+    const button = create('button', 'sort-button');
+    button.type = 'button';
+    button.dataset.focus = `sort:${table.id}:${index}`;
+    button.append(create('span', '', label), icon(ICONS.sort, 11));
+    head.replaceChildren(button);
+
+    button.addEventListener('click', () => {
+      if (state.index === index) state.direction = -state.direction;
+      else {
+        state.index = index;
+        // A name reads best A to Z; a number reads best largest first.
+        state.direction = typeof sortValueOf(body.rows[0].children[index]) === 'number' ? -1 : 1;
+      }
+      apply();
+    });
+  });
+
+  apply();
 }
 
 // Where you are inside a page lives in the address bar, so the back button works and a link can be sent to someone.
@@ -533,6 +609,42 @@ function markClosedPages(sidebar, user) {
   });
 }
 
+// Light and dark, with a third state that is the honest default: follow the machine.
+// The chosen one is remembered in this browser only.
+function buildThemeSwitch(sidebar) {
+  const holder = create('div', 'theme-switch');
+  holder.setAttribute('role', 'group');
+  holder.setAttribute('aria-label', 'Theme');
+
+  const options = [
+    ['light', 'Light', ICONS.sun],
+    ['dark', 'Dark', ICONS.moon],
+    [null, 'Auto', ICONS.auto]
+  ];
+
+  const draw = () => {
+    const current = readTheme();
+    [...holder.children].forEach((button, index) => {
+      button.setAttribute('aria-pressed', String(options[index][0] === current));
+    });
+  };
+
+  options.forEach(([value, label, paths]) => {
+    const button = create('button', '', '');
+    button.type = 'button';
+    button.append(icon(paths, 14), create('span', '', label));
+    button.title = value ? `Always ${label.toLowerCase()}` : 'Follow this device';
+    button.addEventListener('click', () => {
+      setTheme(value);
+      draw();
+    });
+    holder.append(button);
+  });
+
+  draw();
+  sidebar.querySelector('.sidebar-user').before(holder);
+}
+
 function markCurrentPage(sidebar) {
   const here = location.pathname.split('/').pop() || BOARD.home;
   sidebar.querySelectorAll('.menu-item').forEach((item) => {
@@ -584,6 +696,7 @@ function setUpShell() {
 
   markCurrentPage(sidebar);
   markClosedPages(sidebar, user);
+  buildThemeSwitch(sidebar);
   buildRelatedLinks(sidebar);
   buildStateCard(sidebar);
   buildHeaderTools();

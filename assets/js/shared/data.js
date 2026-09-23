@@ -195,16 +195,26 @@ const formatHours = (hours) => (hours === null ? 'nothing recorded' : hours < 24
 const plural = (count, one, many) => `${formatNumber(count)} ${count === 1 ? one : many}`;
 
 // A change between two periods, as the shell's status chip wants it.
+// Below this, a percentage says more than the numbers can support: two requests
+// becoming eight is not a 300% improvement, it is six requests.
+const TOO_FEW_TO_BE_A_PERCENTAGE = 5;
+
 function movement(now, before, { good = 'up', suffix = '' } = {}) {
   if (before === null || before === undefined || !before) return null;
+  if (now === before) return { tone: 'good', text: `no change${suffix}` };
+
+  const direction = now > before ? 'up' : 'down';
+  const tone = direction === good ? 'well' : 'poor';
+
+  // Small numbers swing wildly. Show them as they are rather than dressing them
+  // up as a percentage nobody should act on.
+  if (before < TOO_FEW_TO_BE_A_PERCENTAGE) {
+    return { direction, tone, text: `${formatNumber(before)} to ${formatNumber(now)}${suffix}` };
+  }
+
   const share = (now - before) / before;
   if (Math.abs(share) < 0.005) return { tone: 'good', text: `no change${suffix}` };
-  const direction = share > 0 ? 'up' : 'down';
-  return {
-    direction,
-    tone: direction === good ? 'well' : 'poor',
-    text: `${formatPercent(Math.abs(share))}${suffix}`
-  };
+  return { direction, tone, text: `${formatPercent(Math.abs(share))}${suffix}` };
 }
 
 // ---------- reading the rows ----------

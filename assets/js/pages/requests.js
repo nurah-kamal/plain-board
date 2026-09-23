@@ -104,6 +104,7 @@ function showBand() {
 
   table.append(head, body);
   labelCells(table);
+  sortableTable(table);
   showPicked();
 }
 

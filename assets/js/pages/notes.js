@@ -87,6 +87,7 @@ function showGrade() {
 
   table.append(head, body);
   labelCells(table);
+  sortableTable(table);
 }
 
 function render() {

@@ -28,7 +28,8 @@ const ICONS = {
   decisions: '<path d="M12 3.5l8.5 5v7l-8.5 5-8.5-5v-7z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
   trends: '<path d="M3.5 16.5l5-5 3.5 3.5 6.5-7"/><path d="M15 8h3.5v3.5"/>',
   sources: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
-  rules: '<path d="M5 3.5h14a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1z"/><path d="M8 8h8M8 12h8M8 16h5"/>'
+  rules: '<path d="M5 3.5h14a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  components: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><circle cx="17" cy="17" r="3.5"/>'
 };
 
 const svg = (paths, size = 20) =>
@@ -71,7 +72,11 @@ const PAGES = [
     description: 'What this board reads and what it cannot see.' },
   { file: 'rules.html', script: 'rules', name: 'Reading rules', icon: 'rules', group: 'Evidence',
     title: 'Reading rules', note: 'How every figure on this board is counted, and what each one will not prove.',
-    description: 'How each figure on this board is counted.' }
+    description: 'How each figure on this board is counted.' },
+
+  { file: 'components.html', script: 'components', name: 'Components', icon: 'components', group: 'The kit',
+    title: 'Components', note: 'Every part the kit ships, drawn once, with the call that drew it.',
+    description: 'Every chart, control and state the kit ships.' }
 ];
 
 function menu(current) {
@@ -398,6 +403,45 @@ ${filters()}
             <ul class="gap-list" id="gap-list"></ul>
           </section>
         </div>`,
+
+  components: `        <p class="panel-note">Everything below is drawn with its own made-up numbers, so it can be judged on how it looks rather than on whatever the demo data happens to say today. The call that drew each one is underneath it.</p>
+
+        <section class="panel" aria-labelledby="charts-title">
+          <div class="panel-head">
+            <h2 id="charts-title">Charts</h2>
+          </div>
+          <p class="panel-note">Drawn in SVG by <code>assets/js/shared/charts.js</code>. No charting library is loaded — the content security policy would not allow one.</p>
+          <ul class="demo-list" id="chart-list"></ul>
+        </section>
+
+        <section class="panel" aria-labelledby="figures-title">
+          <div class="panel-head">
+            <h2 id="figures-title">Figures and states</h2>
+          </div>
+          <ul class="demo-list" id="tile-list"></ul>
+        </section>
+
+        <section class="panel" aria-labelledby="controls-title">
+          <div class="panel-head">
+            <h2 id="controls-title">Controls</h2>
+          </div>
+          <ul class="demo-list" id="control-list"></ul>
+        </section>
+
+        <section class="panel" aria-labelledby="tables-title">
+          <div class="panel-head">
+            <h2 id="tables-title">Tables</h2>
+          </div>
+          <ul class="demo-list" id="table-list"></ul>
+        </section>
+
+        <section class="panel" aria-labelledby="honest-title">
+          <div class="panel-head">
+            <h2 id="honest-title">The honest states</h2>
+          </div>
+          <p class="panel-note">The parts that stop the board overclaiming. These are the ones worth copying even if you take nothing else.</p>
+          <ul class="demo-list" id="state-list"></ul>
+        </section>`,
 
   rules: `        <p class="panel-note">Every figure on this board is worked out from one list of requests. Nothing is typed in twice, so a headline and a chart cannot disagree.</p>
 

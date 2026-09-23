@@ -47,6 +47,36 @@ function endSession() {
   }
 }
 
+// Light or dark. No choice stored means the operating system decides, which is why
+// this runs in the <head> — setting it later would flash the wrong theme first.
+const THEME_KEY = 'plain-board-theme';
+
+function readTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    return saved === 'light' || saved === 'dark' ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
+function applyTheme(theme) {
+  if (theme) document.documentElement.dataset.theme = theme;
+  else delete document.documentElement.dataset.theme;
+}
+
+function setTheme(theme) {
+  try {
+    if (theme) localStorage.setItem(THEME_KEY, theme);
+    else localStorage.removeItem(THEME_KEY);
+  } catch {
+    // The page still works, it just will not remember the choice.
+  }
+  applyTheme(theme);
+}
+
+applyTheme(readTheme());
+
 // Runs in the <head> so nobody sees a flash of the wrong page.
 const pageType = document.documentElement.dataset.page;
 const signedIn = readSession();
