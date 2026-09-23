@@ -125,7 +125,7 @@ const shell = (page, body) => `<!doctype html>
   <link rel="icon" href="../assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="../assets/css/styles.css">
   <script src="../assets/js/shared/session.js"></script>
 </head>
@@ -185,13 +185,13 @@ ${body}
 
 // The body of each page: the markup its script fills in.
 const BODIES = {
-  today: `        <nav class="start-here" id="start-here" aria-label="Where to start"></nav>
+  today: `        <section class="tiles tiles-four tiles-lead" id="tiles" aria-label="Totals"></section>
+
+        <nav class="start-here" id="start-here" aria-label="Where to start"></nav>
 
 ${filters()}
 
         <p class="panel-note" id="filter-note"></p>
-
-        <section class="tiles tiles-four" id="tiles" aria-label="Totals"></section>
 
         <div class="grid">
           <section class="panel span-7" aria-labelledby="waiting-title">

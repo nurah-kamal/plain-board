@@ -8,17 +8,21 @@ Colours live as custom properties on `:root` in `assets/css/styles.css`, redefin
 
 | Token | Light | Dark | Used for |
 | --- | --- | --- | --- |
-| `--page` | `#F1F6F3` | `#0A130F` | The ground behind everything |
-| `--card` | `#FFFFFF` | `#12201A` | Panels, tiles, the menu, raised surfaces |
-| `--field` | `#E6EEE9` | `#1A2B24` | Inputs, chip backgrounds, tracks |
-| `--ink` | `#11211B` | `#E7F0EB` | Body text |
-| `--muted` | `#52665D` | `#96A9A0` | Second-line text, labels, captions |
-| `--line` | `#D6E4DC` | `#26382F` | Hairlines and dividers |
-| `--navy` / `--navy-deep` | `#14352C` / `#0C211A` | `#143027` / `#0C1F19` | The dark panel on the sign-in |
-| `--accent` | `#17A57C` | `#3FBF95` | The one accent the board is known by |
-| `--accent-ink` | `#0A6B50` | `#7FDCBB` | Links, and text on green |
-| `--group-1` … `--group-5` | teal / red / navy / stone / grey | lighter versions | Whatever dimension your charts split by |
-| `--focus` | `#0F766E` | `#6EE7C4` | The focus ring |
+| `--page` | `#F4F6F8` | `#0B1017` | The ground behind everything |
+| `--card` | `#FFFFFF` | `#131A24` | Panels, tiles, the menu, raised surfaces |
+| `--field` | `#EDF0F4` | `#1B2430` | Inputs, chip backgrounds, tracks |
+| `--ink` | `#0F1826` | `#E8EDF4` | Body text |
+| `--muted` | `#56637A` | `#9BA8BA` | Second-line text, labels, captions |
+| `--line` | `#DCE2EA` | `#26303D` | Hairlines, dividers, and every surface edge |
+| `--navy` / `--navy-deep` | `#16243C` / `#0C1524` | same | The identity: the sign-in panel and the dark art |
+| `--selected` | `#16243C` | `#2E4A75` | A chosen segment, the avatar |
+| `--current-soft` / `--current-ink` | `#E4EEF7` / `#1B3A63` | `#1B2C44` / `#A7C3E2` | The page you are on, in the menu |
+| `--accent` | `#1B7F5F` | `#46C79B` | **Movement, and nothing else** |
+| `--bar` / `--chart-line` | `#2E4A75` | `#6E97D0` | The charts |
+| `--group-1` … `--group-5` | navy / red / slate / stone / grey | lighter versions | Whatever dimension your charts split by |
+| `--focus` | `#1B3A63` | `#8FB8EE` | The focus ring |
+
+**Navy is the identity; green is a verb.** The green is not the board's colour — it appears only where something moved against the period before, and it is paired with a red of the same weight for movement the other way. That is why the menu's current page and the avatar have their own `--current-*` and `--selected` tokens rather than borrowing the accent: if the accent shows up anywhere that is not movement, it stops meaning movement.
 
 **A group colour is a label, not a verdict.** `--group-2` is red because a set of distinguishable colours needs a red in it, not because that group is in trouble. Every chart that splits by group names the colours in its key, and a *state* always lives in a chip or a tinted card — never in a bar or a slice.
 
@@ -31,9 +35,13 @@ Colours live as custom properties on `:root` in `assets/css/styles.css`, redefin
 Two faces, from Google Fonts — the only external resource the content security policy allows:
 
 - **Archivo** (500/600/700) for headings, figures and anything counted.
-- **Nunito** (400/600/700) for running text.
+- **IBM Plex Sans** (400/500/600/700) for running text and every control.
 
 Figures use `font-variant-numeric: tabular-nums` wherever they line up in a column, so a changing number does not shift the ones beside it.
+
+**Labels are small, spaced and quiet.** A tile's name and a menu group heading are set at 11px, 600 weight, uppercase, `letter-spacing: .09em`, in `--muted`. The label recedes so the figure beside it carries the weight — the single cheapest way to make a board read as a considered document rather than a web page.
+
+The body face matters more here than any colour. An earlier version of this kit used Nunito, a rounded humanist sans, and it undercut everything else on the page.
 
 ## Space and shape
 
@@ -41,13 +49,13 @@ Figures use `font-variant-numeric: tabular-nums` wherever they line up in a colu
 
 | Token | Size | For |
 | --- | --- | --- |
-| `--radius` | 16px | Surfaces: panels, tiles, cards |
-| `--radius-control` | 10px | Controls: buttons, inputs, selects, the menu, notices, the toast |
-| `--radius-mark` | 4px | Marks: small bars and swatches |
+| `--radius` | 12px | Surfaces: panels, tiles, cards |
+| `--radius-control` | 7px | Controls: buttons, inputs, selects, the menu, notices, the toast |
+| `--radius-mark` | 3px | Marks: small bars and swatches |
 
 Pills (`999px`) are for chips and counts only; `50%` is for avatars. Nothing else rounds its own corners.
 
-**Depth instead of outlines.** A surface lifts off the page with `--shell` rather than drawing a border around itself. In dark mode `--shell` becomes a single hairline, because a shadow on a dark ground reads as dirt.
+**Elevation is declared once: a hairline, never both.** Every surface — panel, tile, drill-down tile, the menu column — is defined by a 1px `--line` border and carries no shadow at all. A 1px border sitting under a soft shadow is the ghost-card look, and it is the difference between a page that was designed and one that was assembled. A tile that is also a button shows its hover by moving its border and fill, not by lifting.
 
 **The page rhythm is 22px.** `.app-main` spaces its children by 22px and `.grid` uses the same gap. Cards in a row stretch to the same depth, so nothing floats above a gap.
 
@@ -64,10 +72,11 @@ These are design decisions, not missing work. They are the reason the kit exists
 
 ## Components
 
-- **The menu** — a light column on `--card`, held off the page by a hairline. The page you are on is a soft green pill with a thin green ring; everything else is `--muted` until hovered. The gaps, padding and row height are sized against the window with `clamp()`, with two `max-height` steps for a short laptop screen, so the menu does not scroll. A finger still gets a 44px row through `@media (pointer: coarse)`.
+- **The menu** — a light column on `--card`, held off the page by a hairline. The page you are on is a soft navy pill with a thin navy ring, drawn from `--current-soft`; everything else is `--muted` until hovered. A page the viewer may not open stays in the list, greyed, with a **Managers** tag. The gaps, padding and row height are sized against the window with `clamp()`, with two `max-height` steps for a short laptop screen, so the menu does not scroll. A finger still gets a 44px row through `@media (pointer: coarse)`.
 - **The page header** — the page name, its one-line note, the board search and the refresh button, closed by a hairline. It is built in the script rather than read from the markup, so a browser holding an older copy of the HTML still gets the current header.
-- **`.tile`** — a figure with its name, a note, a sparkline of the run behind it and an (i). On `--card` with `--shell`.
-- **Where to start** — a row of counts at the top of the landing page, above the filters, each a link into the right group. It counts only what is true right now, and disappears when there is nothing to do.
+- **`.tile`** — a figure with its name, a note, a sparkline of the run behind it and an (i). On `--card`, edged with a hairline.
+- **The landing page reads as a summary.** The four figures come first and are set larger than figures anywhere else, because they are the answer. Then what needs somebody, then the controls to change the selection, then the detail. A reader who stops after two seconds has still had the point.
+- **Where to start** — a row of counts under the figures, above the filters, each a link into the right group. It counts only what is true right now, and disappears when there is nothing to do.
 - **The filter bar** — period, group, person and a search, shared through `assets/js/shared/filters.js` so no two pages can count the same selection differently. The state lives in the query string, so a view can be sent to somebody.
 - **Drill-down tiles** — `.status-tile` for a state or a band. Opening one puts the step in the hash, so the browser's back button works and a link can be shared.
 - **Tables** — `.results`, with an optional tick column. On a phone the heading row is dropped and every cell carries its own heading through `labelCells()`.
@@ -78,6 +87,10 @@ Two different things, kept apart:
 
 - **Filters live in the query string** (`?range=week&product=billing`), set with `history.replaceState`, so typing in a search box does not fill the history with a hundred entries.
 - **Where you are inside a page lives in the hash** (`#8-14`), set with `pushState`, so back means back.
+
+## The parts the browser draws
+
+Text selection, the caret, the checkbox tick and the scrollbar all ship with defaults that belong to no design system, so they are themed from the palette like anything else. It costs four declarations and it is the clearest signal that a page was built rather than assembled.
 
 ## Accessibility
 

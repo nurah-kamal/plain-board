@@ -1,90 +1,97 @@
 :root {
   color-scheme: light dark;
-  --page: #F1F6F3;
+  --page: #F4F6F8;
   --card: #FFFFFF;
-  --field: #E6EEE9;
-  --ink: #11211B;
-  --muted: #52665D;
-  --line: #D6E4DC;
-  --navy: #14352C;
-  --navy-deep: #0C211A;
-  --accent: #17A57C;
-  --accent-ink: #0A6B50;
-  --accent-soft: #D8F1E6;
-  --focus: #0F766E;
-  --now: #0A6B50;
-  --bar: #17A57C;
-  --field-line: #6D837A;
-  --selected: #14352C;
+  --field: #EDF0F4;
+  --ink: #0F1826;
+  --muted: #56637A;
+  --line: #DCE2EA;
+  --navy: #16243C;
+  --navy-deep: #0C1524;
+  --accent: #1B7F5F;
+  --accent-ink: #14654B;
+  --accent-soft: #E3F0EA;
+  --focus: #1B3A63;
+  --now: #14654B;
+  --bar: #2E4A75;
+  --field-line: #7A8699;
+  --selected: #16243C;
   --on-selected: #FFFFFF;
-  --on-accent: #06251B;
-  --info-soft: #DEEAF4;
-  --info-ink: #2C4B6B;
-  --error: #B0392C;
+  --on-accent: #FFFFFF;
+  --info-soft: #E4EEF7;
+  --info-ink: #27456D;
+  --error: #A32B23;
   --on-navy: #FFFFFF;
   --on-navy-muted: rgba(255, 255, 255, .8);
   --heading: "Archivo", "Segoe UI", system-ui, sans-serif;
-  --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   /* Three shapes, and nothing else: a surface, a control, a mark. Pills are for chips only. */
-  --radius: 16px;
-  --radius-control: 10px;
-  --radius-mark: 4px;
-  --shell: 0 1px 2px rgba(17, 33, 27, .04), 0 16px 32px -20px rgba(17, 33, 27, .24);
-  --ring-accent: #0F8A66;
-  --ring-good: #2F7D5C;
-  --ring-warn: #B0563E;
-  --chart-line: #17A57C;
-  --chart-fill: rgba(23, 165, 124, .14);
-  --group-1: #0E8C86;
-  --group-2: #B3332A;
-  --group-3: #29426B;
-  --group-4: #6D6350;
-  --group-5: #77877F;
-  --slice-1: #17A57C;
-  --slice-2: #14352C;
-  --slice-3: #6FC2A5;
-  --slice-4: #B98A3C;
-  --slice-5: #8D9C95;
+  --radius: 12px;
+  --radius-control: 7px;
+  --radius-mark: 3px;
+  /* The page you are on. Its own colour, because --accent now means movement only. */
+  --current-soft: #E4EEF7;
+  --current-ink: #1B3A63;
+  --current-line: #A9C2DE;
+  --shell: 0 0 0 1px #E2E7ED;
+  --ring-accent: #2E4A75;
+  --ring-good: #1B7F5F;
+  --ring-warn: #A8551F;
+  --chart-line: #2E4A75;
+  --chart-fill: rgba(46, 74, 117, .12);
+  --group-1: #24527E;
+  --group-2: #A3382C;
+  --group-3: #4C7A93;
+  --group-4: #7A6A55;
+  --group-5: #8892A1;
+  --slice-1: #24527E;
+  --slice-2: #16243C;
+  --slice-3: #6B8FB5;
+  --slice-4: #A8814A;
+  --slice-5: #9AA4B2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --page: #0A130F;
-    --card: #12201A;
-    --field: #1A2B24;
-    --ink: #E7F0EB;
-    --muted: #96A9A0;
-    --line: #26382F;
-    --navy: #143027;
-    --navy-deep: #0C1F19;
-    --accent: #3FBF95;
-    --accent-ink: #7FDCBB;
-    --accent-soft: #14312A;
-    --focus: #6EE7C4;
-    --now: #3FBF95;
-    --bar: #3FBF95;
-    --field-line: #6A7E76;
-    --selected: #3FBF95;
-    --on-selected: #06251B;
-    --info-soft: #1C2A38;
-    --info-ink: #B7CBE3;
+    --page: #0B1017;
+    --card: #131A24;
+    --field: #1B2430;
+    --ink: #E8EDF4;
+    --muted: #9BA8BA;
+    --line: #26303D;
+    --navy: #16243C;
+    --navy-deep: #0C1524;
+    --accent: #46C79B;
+    --accent-ink: #86DCBB;
+    --accent-soft: #152B24;
+    --focus: #8FB8EE;
+    --now: #86DCBB;
+    --bar: #6E97D0;
+    --field-line: #6E7C8F;
+    --selected: #2E4A75;
+    --on-selected: #FFFFFF;
+    --info-soft: #16253A;
+    --info-ink: #B7CDE8;
     --error: #F08A7E;
     --shell: 0 0 0 1px var(--line);
-    --ring-accent: #3FBF95;
-    --ring-good: #7FD0AE;
-    --ring-warn: #E89A87;
-    --chart-line: #3FBF95;
-    --chart-fill: rgba(63, 191, 149, .14);
-    --group-1: #46B8B1;
+    --current-soft: #1B2C44;
+    --current-ink: #A7C3E2;
+    --current-line: #3A5A85;
+    --ring-accent: #6E97D0;
+    --ring-good: #46C79B;
+    --ring-warn: #E3A06C;
+    --chart-line: #6E97D0;
+    --chart-fill: rgba(110, 151, 208, .16);
+    --group-1: #5E93C8;
     --group-2: #E2786A;
-    --group-3: #7E9DC9;
+    --group-3: #7FA8C4;
     --group-4: #BCA98A;
-    --group-5: #93A39B;
-    --slice-1: #3FBF95;
-    --slice-2: #7FDCBB;
-    --slice-3: #A8D8C4;
+    --group-5: #93A0B0;
+    --slice-1: #5E93C8;
+    --slice-2: #A7C3E2;
+    --slice-3: #2E4A75;
     --slice-4: #D9B36B;
-    --slice-5: #8A9A93;
+    --slice-5: #8A96A6;
   }
 
   select.input,
@@ -93,42 +100,45 @@
 
 /* The same, for somebody who chose dark on a light machine. */
 :root[data-theme="dark"] {
-    --page: #0A130F;
-    --card: #12201A;
-    --field: #1A2B24;
-    --ink: #E7F0EB;
-    --muted: #96A9A0;
-    --line: #26382F;
-    --navy: #143027;
-    --navy-deep: #0C1F19;
-    --accent: #3FBF95;
-    --accent-ink: #7FDCBB;
-    --accent-soft: #14312A;
-    --focus: #6EE7C4;
-    --now: #3FBF95;
-    --bar: #3FBF95;
-    --field-line: #6A7E76;
-    --selected: #3FBF95;
-    --on-selected: #06251B;
-    --info-soft: #1C2A38;
-    --info-ink: #B7CBE3;
+    --page: #0B1017;
+    --card: #131A24;
+    --field: #1B2430;
+    --ink: #E8EDF4;
+    --muted: #9BA8BA;
+    --line: #26303D;
+    --navy: #16243C;
+    --navy-deep: #0C1524;
+    --accent: #46C79B;
+    --accent-ink: #86DCBB;
+    --accent-soft: #152B24;
+    --focus: #8FB8EE;
+    --now: #86DCBB;
+    --bar: #6E97D0;
+    --field-line: #6E7C8F;
+    --selected: #2E4A75;
+    --on-selected: #FFFFFF;
+    --info-soft: #16253A;
+    --info-ink: #B7CDE8;
     --error: #F08A7E;
     --shell: 0 0 0 1px var(--line);
-    --ring-accent: #3FBF95;
-    --ring-good: #7FD0AE;
-    --ring-warn: #E89A87;
-    --chart-line: #3FBF95;
-    --chart-fill: rgba(63, 191, 149, .14);
-    --group-1: #46B8B1;
+    --current-soft: #1B2C44;
+    --current-ink: #A7C3E2;
+    --current-line: #3A5A85;
+    --ring-accent: #6E97D0;
+    --ring-good: #46C79B;
+    --ring-warn: #E3A06C;
+    --chart-line: #6E97D0;
+    --chart-fill: rgba(110, 151, 208, .16);
+    --group-1: #5E93C8;
     --group-2: #E2786A;
-    --group-3: #7E9DC9;
+    --group-3: #7FA8C4;
     --group-4: #BCA98A;
-    --group-5: #93A39B;
-    --slice-1: #3FBF95;
-    --slice-2: #7FDCBB;
-    --slice-3: #A8D8C4;
+    --group-5: #93A0B0;
+    --slice-1: #5E93C8;
+    --slice-2: #A7C3E2;
+    --slice-3: #2E4A75;
     --slice-4: #D9B36B;
-    --slice-5: #8A9A93;
+    --slice-5: #8A96A6;
   }
 
 :root[data-theme="dark"] select.input,
@@ -416,8 +426,8 @@ select option, select optgroup { background-color: var(--card); color: var(--ink
 }
 .menu-item svg { flex: none; width: 20px; height: 20px; }
 a.menu-item:hover { background: var(--field); color: var(--ink); }
-.menu-item[aria-current="page"] { background: var(--accent-soft); color: var(--accent-ink); box-shadow: inset 0 0 0 1px var(--accent); }
-.menu-item[aria-current="page"] svg { color: var(--accent-ink); }
+.menu-item[aria-current="page"] { background: var(--current-soft); color: var(--current-ink); box-shadow: inset 0 0 0 1px var(--current-line); }
+.menu-item[aria-current="page"] svg { color: var(--current-ink); }
 .menu { scrollbar-color: var(--line) transparent; }
 
 /* A short laptop screen holds the same menu, drawn tighter, so it never needs scrolling */
@@ -482,8 +492,8 @@ a.menu-item:hover { background: var(--field); color: var(--ink); }
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--selected);
+  color: var(--on-selected);
   font-family: var(--heading);
   font-weight: 600;
   font-size: 14px;
@@ -950,8 +960,8 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
   }
   .tab svg { width: 22px; height: 22px; }
   .tab:hover { color: var(--ink); }
-  .tab[aria-current="page"], .tab.is-current { color: var(--accent-ink); }
-  .tab[aria-current="page"]::before, .tab.is-current::before { content: ""; position: absolute; top: 0; width: 28px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent-ink); }
+  .tab[aria-current="page"], .tab.is-current { color: var(--current-ink); }
+  .tab[aria-current="page"]::before, .tab.is-current::before { content: ""; position: absolute; top: 0; width: 28px; height: 3px; border-radius: 0 0 3px 3px; background: var(--current-ink); }
   .tab .count { position: absolute; top: 4px; left: calc(50% + 6px); margin: 0; min-width: 20px; padding: 0 6px; font-size: 12px; }
   .toast { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
   .sort-picker { display: block; margin-bottom: 12px; }
@@ -1035,6 +1045,35 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
 .menu-item.is-shut { color: var(--muted); cursor: default; opacity: .72; }
 .menu-item.is-shut:hover { background: none; }
 .menu-item.is-shut .tag { margin-left: auto; }
+
+/* One elevation, not two. A surface is defined by a hairline; the shadow is gone,
+   because a 1px border under a soft shadow is the ghost-card look. */
+.panel, .tile, .status-tile { border: 1px solid var(--line); box-shadow: none; }
+.sidebar { box-shadow: none; border-right: 1px solid var(--line); }
+
+/* A label in a board pack is small, spaced and quiet, so the figure beside it carries. */
+.menu-label,
+.tile-badge > span:not(.tile-icon) {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 { letter-spacing: -.022em; }
+.tile-figure b { letter-spacing: -.025em; }
+
+/* The four figures on the landing page are the answer, so they are read first
+   and set larger than the figures anywhere else. */
+.tiles-lead .tile { padding: 20px; }
+.tiles-lead .tile-figure b { font-size: clamp(34px, 3.4vw, 44px); }
+@media (max-width: 900px) { .tiles-lead .tile-figure b { font-size: clamp(30px, 8vw, 38px); } }
+
+/* The parts the browser draws belong to the design too. */
+::selection { background: var(--current-soft); color: var(--ink); }
+:root { accent-color: var(--accent); caret-color: var(--accent-ink); }
+* { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
 
 /* Lists and tiles used by the board pages */
 .tiles-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -1202,13 +1241,13 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
   padding: 20px 22px 22px;
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shell);
   color: var(--ink);
   font-family: var(--body);
   text-align: left;
   cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
 }
-.status-tile:hover { box-shadow: var(--shell), 0 0 0 1.5px var(--field-line); }
+.status-tile:hover { border-color: var(--field-line); background: var(--field); }
 .status-count { display: flex; align-items: baseline; gap: 6px; }
 .status-count b { font-family: var(--heading); font-size: 34px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
 .status-count span { font-size: 15px; font-weight: 700; color: var(--muted); }
