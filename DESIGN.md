@@ -30,7 +30,7 @@ The two `theme-color` meta tags in every page head carry the same two grounds, s
 
 **A group colour is a label, not a verdict.** `--group-2` is red because a set of distinguishable colours needs a red in it, not because that group is in trouble. Every chart that splits by group names the colours in its key, and a *state* always lives in a chip or a tinted card — never in a bar or a slice.
 
-**The three status colours** carry meaning and are used nowhere decorative: red for stop, yellow for hold, green for go.
+**The three status colours** carry meaning and are used nowhere decorative: red for stop, yellow for hold, green for go. On a chip they are `.status-stop`, `.status-hold` and `.status-good`; on a **Where to start** link they are `.is-stop` and `.is-hold`. Both draw from the same tokens, so one severity reads the same wherever it appears. There is deliberately no second green class — `.status-good` already is it.
 
 **Contrast.** Every text colour measures at least 4.5:1 against the surface behind it, in both themes, measured against its own tint rather than against the page.
 
