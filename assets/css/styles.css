@@ -781,6 +781,17 @@ a.button:not(.button-secondary), a.button:not(.button-secondary):hover { color: 
   font-weight: 700;
   transform: translateX(-50%);
   box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .4);
+  touch-action: none;
+  opacity: 0;
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1), opacity 180ms ease-out;
+}
+/* Enters from below, leaves the same way, so a swipe down matches how it arrived. */
+.toast[data-state="closed"] { transform: translate(-50%, 14px); opacity: 0; }
+.toast[data-state="open"] { transform: translateX(-50%); opacity: 1; }
+.toast[data-dragging] { transition: none; cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: opacity 120ms ease-out; }
+  .toast[data-state="closed"] { transform: translateX(-50%); }
 }
 .toast-action {
   flex: none;

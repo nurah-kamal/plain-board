@@ -99,22 +99,112 @@ const ICONS = {
 
 // One message area per page. An action like Undo keeps the message up a little longer.
 let toastTimer;
+// A toast that cannot disappear while it is being read.
+//
+// The timer pauses whenever a pointer is over the toast or focus is inside it, and
+// resumes on the way out — a message that vanishes mid-sentence is worse than no
+// message. It can also be dismissed early: Escape, or a swipe downwards on touch.
+// It enters and leaves rather than appearing and disappearing, because an element
+// that pops out of existence reads as a glitch.
+let toastLeft = 0;
+let toastStarted = 0;
+let toastHiding = null;
+
+function hideToast(toast) {
+  clearTimeout(toastTimer);
+  if (toast.dataset.state !== 'open') return;
+  toast.dataset.state = 'closed';
+  // wait for the exit before hiding it from the tree, so it is not announced twice
+  toastHiding = setTimeout(() => { toast.hidden = true; }, 180);
+}
+
+function runToastTimer(toast, ms) {
+  clearTimeout(toastTimer);
+  toastLeft = ms;
+  toastStarted = Date.now();
+  toastTimer = setTimeout(() => hideToast(toast), ms);
+}
+
 function showToast(message, action) {
   const toast = document.getElementById('toast');
   if (!toast) return;
+
   clearTimeout(toastTimer);
-  toast.hidden = false;
+  clearTimeout(toastHiding);
+
   toast.replaceChildren(create('span', '', message));
   if (action) {
     const button = create('button', 'toast-action', action.label);
     button.type = 'button';
     button.addEventListener('click', () => {
-      toast.hidden = true;
+      hideToast(toast);
       action.onClick();
     });
     toast.append(button);
   }
-  toastTimer = setTimeout(() => { toast.hidden = true; }, action ? 7000 : 4000);
+
+  const full = action ? 7000 : 4000;
+  toast.hidden = false;
+
+  // Start closed, force the browser to lay it out, then open: the transition needs a
+  // computed starting point. requestAnimationFrame would be the obvious way to get
+  // one, but it does not fire in a background tab — a toast raised there would never
+  // open, and would then be stuck invisible and undismissable. Reading offsetHeight
+  // flushes layout synchronously and works everywhere.
+  toast.dataset.state = 'closed';
+  void toast.offsetHeight;
+  toast.dataset.state = 'open';
+
+  runToastTimer(toast, full);
+
+  if (toast.dataset.wired) return;
+  toast.dataset.wired = 'true';
+
+  // Reading it should not race a timer.
+  const hold = () => {
+    clearTimeout(toastTimer);
+    toastLeft = Math.max(1200, toastLeft - (Date.now() - toastStarted));
+  };
+  const resume = () => { if (toast.dataset.state === 'open') runToastTimer(toast, toastLeft); };
+  toast.addEventListener('pointerenter', hold);
+  toast.addEventListener('pointerleave', resume);
+  toast.addEventListener('focusin', hold);
+  toast.addEventListener('focusout', resume);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toast.dataset.state === 'open') hideToast(toast);
+  });
+
+  // Swipe it away, the direction it entered from.
+  let from = null;
+  toast.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse') return;
+    from = event.clientY;
+    toast.setPointerCapture(event.pointerId);
+    toast.dataset.dragging = 'true';
+  });
+  toast.addEventListener('pointermove', (event) => {
+    if (from === null) return;
+    const moved = Math.max(0, event.clientY - from);
+    toast.style.transform = `translate(-50%, ${moved}px)`;
+    toast.style.opacity = String(Math.max(0, 1 - moved / 120));
+  });
+  const endDrag = (event) => {
+    if (from === null) return;
+    const moved = Math.max(0, event.clientY - from);
+    from = null;
+    delete toast.dataset.dragging;
+    toast.style.transform = '';
+    toast.style.opacity = '';
+    if (toast.hasPointerCapture && toast.hasPointerCapture(event.pointerId)) toast.releasePointerCapture(event.pointerId);
+    if (moved > 60) hideToast(toast);
+    else resume();
+  };
+  // pointercancel matters: the browser takes the gesture to scroll and the toast
+  // must not be left stuck mid-swipe
+  toast.addEventListener('pointerup', endDrag);
+  toast.addEventListener('pointercancel', endDrag);
+  toast.addEventListener('lostpointercapture', endDrag);
 }
 
 // Phones get the most used pages along the bottom, within reach of a thumb
