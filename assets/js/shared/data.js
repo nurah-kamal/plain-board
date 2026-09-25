@@ -1,14 +1,15 @@
 // Everything the demo board shows. All of it is invented.
 //
-// Swap this file for your own and the rest of the kit follows. The shapes below are
-// the only contract: the pages read these names, and nothing else.
+// The demo is one source, not the only one. A file loaded on the Your data page is read
+// by source.js, which runs before this file, and REQUESTS below points at whichever is
+// in play. Everything under it is derived and does not care which.
 //
 // One rule worth keeping: every figure on this board is derived from REQUESTS. Nothing
 // is typed in twice. A board whose headline figure and whose chart disagree is worse
 // than useless, and the only way to be sure they cannot is to compute both from one list.
 
 // When the sample figures were taken, and how far back the rows go.
-const SNAPSHOT = {
+const DEMO_SNAPSHOT = {
   read: 'Friday 18 September, 17:40',
   readShort: '17:40',
   days: 84
@@ -16,27 +17,27 @@ const SNAPSHOT = {
 
 // The dimension a board groups by. Three is the comfortable maximum for the
 // colours below; add more and they start repeating.
-const PRODUCTS = {
+const DEMO_PRODUCTS = {
   delivery: 'Delivery',
   billing: 'Billing',
   accounts: 'Accounts'
 };
 
-const PRODUCT_COLOUR = {
+const DEMO_PRODUCT_COLOUR = {
   delivery: 'var(--group-1)',
   billing: 'var(--group-2)',
   accounts: 'var(--group-3)'
 };
 
-const CHANNELS = ['Email', 'Phone', 'Web form'];
+const DEMO_CHANNELS = ['Email', 'Phone', 'Web form'];
 
-const PEOPLE = ['Ada Nkemelu', 'Tomas Brandt', 'Priya Raghunathan', 'Joel Okonkwo', 'Mireille Dufour', 'Sam Whitlock'];
+const DEMO_PEOPLE = ['Ada Nkemelu', 'Tomas Brandt', 'Priya Raghunathan', 'Joel Okonkwo', 'Mireille Dufour', 'Sam Whitlock'];
 
 // One row per request.
 //   days   how many days ago it arrived (0 = today, 83 = twelve weeks back)
 //   reply  hours to the first recorded reply, or null when nothing was recorded
 //   state  open | answered | closed
-const REQUESTS = [
+const DEMO_REQUESTS = [
   { id: 'R-1188', product: 'delivery', channel: 'Email',    person: 'Ada Nkemelu',       days: 0,  reply: 1,    state: 'answered', note: 'Parcel scanned at the depot. Customer told to expect it Tuesday.' },
   { id: 'R-1187', product: 'billing',  channel: 'Email',    person: 'Tomas Brandt',      days: 0,  reply: 3,    state: 'answered', note: 'Duplicate charge confirmed, refund raised with finance.' },
   { id: 'R-1186', product: 'accounts', channel: 'Phone',    person: 'Priya Raghunathan', days: 0,  reply: null, state: 'open',     note: '' },
@@ -284,6 +285,40 @@ const NOTE_GRADES = {
 };
 
 const NOTE_GRADE_TONE = { full: 'good', thin: 'waiting', 'one-word': 'changed', none: 'changed' };
+
+// ---------- which rows the board is showing ----------
+//
+// One decision, made once, before anything is derived. A file that was loaded on the
+// Your data page wins; otherwise it is the demo above.
+
+const LOADED = typeof BOARD_SOURCE !== 'undefined' ? BOARD_SOURCE : null;
+
+const REQUESTS = LOADED ? LOADED.rows : DEMO_REQUESTS;
+
+const PRODUCTS = LOADED ? LOADED.groups : DEMO_PRODUCTS;
+
+const CHANNELS = LOADED
+  ? [...new Set(REQUESTS.map((request) => request.channel))].sort()
+  : DEMO_CHANNELS;
+
+const PEOPLE = LOADED
+  ? [...new Set(REQUESTS.map((request) => request.person))].sort()
+  : DEMO_PEOPLE;
+
+// The ramp has five steps. A file with more groups than that repeats colours, which is
+// survivable because every chart that splits by group names its colours in a key — and
+// the Your data page says it is happening rather than leaving it to be noticed.
+const PRODUCT_COLOUR = LOADED
+  ? Object.fromEntries(Object.keys(PRODUCTS).map((key, index) => [key, `var(--group-${(index % 5) + 1})`]))
+  : DEMO_PRODUCT_COLOUR;
+
+const SNAPSHOT = LOADED
+  ? {
+    read: new Date(LOADED.read).toLocaleString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }),
+    readShort: new Date(LOADED.read).toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' }),
+    days: 84
+  }
+  : DEMO_SNAPSHOT;
 
 // ---------- everything below is derived, never typed in twice ----------
 

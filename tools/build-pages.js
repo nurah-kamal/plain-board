@@ -29,7 +29,8 @@ const ICONS = {
   trends: '<path d="M3.5 16.5l5-5 3.5 3.5 6.5-7"/><path d="M15 8h3.5v3.5"/>',
   sources: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
   rules: '<path d="M5 3.5h14a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
-  components: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><circle cx="17" cy="17" r="3.5"/>'
+  components: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><circle cx="17" cy="17" r="3.5"/>',
+  data: '<path d="M4 6.5c0-1.4 3.6-2.5 8-2.5s8 1.1 8 2.5-3.6 2.5-8 2.5-8-1.1-8-2.5z"/><path d="M4 6.5v11c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5v-11"/><path d="M4 12c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5"/>'
 };
 
 const svg = (paths, size = 20) =>
@@ -76,7 +77,11 @@ const PAGES = [
 
   { file: 'components.html', script: 'components', name: 'Components', icon: 'components', group: 'The kit',
     title: 'Components', note: 'Every part the kit ships, drawn once, with the call that drew it.',
-    description: 'Every chart, control and state the kit ships.' }
+    description: 'Every chart, control and state the kit ships.' },
+
+  { file: 'data.html', script: 'data', name: 'Your data', icon: 'data', group: 'The kit',
+    title: 'Your data', note: 'What this board is reading, and how to point it at your own rows instead.',
+    description: 'Point the board at your own rows.' }
 ];
 
 function menu(current) {
@@ -173,6 +178,7 @@ ${body}
 
   <div class="toast" id="toast" role="status" hidden></div>
 
+  <script src="../assets/js/shared/source.js"></script>
   <script src="../assets/js/shared/data.js"></script>
   <script src="../assets/js/shared/board.js"></script>
   <script src="../assets/js/shared/app.js"></script>
@@ -405,6 +411,37 @@ ${filters()}
             <ul class="gap-list" id="gap-list"></ul>
           </section>
         </div>`,
+
+  data: `        <section class="panel" aria-labelledby="showing-title">
+          <div class="panel-head">
+            <h2 id="showing-title">What this board is reading</h2>
+          </div>
+          <div id="showing"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="load-title">
+          <div class="panel-head">
+            <h2 id="load-title">Give it your own rows</h2>
+          </div>
+          <p class="panel-note">The file is read here, in this browser, and kept here. It is not uploaded: there is no server to upload it to, and the content security policy on every page of this board would not allow one to be reached.</p>
+          <div class="drop" id="drop">
+            <p><b>Drop a CSV or JSON file here</b></p>
+            <p class="panel-note">or</p>
+            <label class="button button-secondary button-inline" for="file">Choose a file</label>
+            <input class="sr-only" id="file" type="file" accept=".csv,.json,text/csv,application/json">
+          </div>
+          <div id="outcome"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="columns-title">
+          <div class="panel-head">
+            <h2 id="columns-title">The columns it looks for</h2>
+          </div>
+          <p class="panel-note">A heading is matched whatever its case, and whether it is spaced, hyphenated or underscored. Anything else in the file is left alone and named back to you.</p>
+          <div class="table-wrap">
+            <table class="results" id="columns"><tbody></tbody></table>
+          </div>
+        </section>`,
 
   components: `        <p class="panel-note">Everything below is drawn with its own made-up numbers, so it can be judged on how it looks rather than on whatever the demo data happens to say today. The call that drew each one is underneath it.</p>
 

@@ -15,25 +15,31 @@ The system is light only. These boards are read at a desk in office light and on
 
 The two `theme-color` meta tags in every page head carry the same two grounds, so the browser's own bar matches the page it sits above.
 
-| Token | Light | Dark | Used for |
-| --- | --- | --- | --- |
-| `--page` | `#F4F6F8` | `#0B1017` | The ground behind everything |
-| `--card` | `#FFFFFF` | `#131A24` | Panels, tiles, the menu, raised surfaces |
-| `--field` | `#EDF0F4` | `#1B2430` | Inputs, chip backgrounds, tracks |
-| `--ink` | `#0F1826` | `#E8EDF4` | Body text |
-| `--muted` | `#56637A` | `#9BA8BA` | Second-line text, labels, captions |
-| `--line` | `#DCE2EA` | `#26303D` | Hairlines, dividers, and every surface edge |
-| `--navy` / `--navy-deep` | `#16243C` / `#0C1524` | same | The identity: the sign-in panel and the dark art |
-| `--selected` | `#16243C` | `#2E4A75` | A chosen segment, the avatar |
-| `--current-soft` / `--current-ink` | `#E4EEF7` / `#1B3A63` | `#1B2C44` / `#A7C3E2` | The page you are on, in the menu |
-| `--accent` | `#1B7F5F` | `#46C79B` | **Movement, and nothing else** |
-| `--bar` / `--chart-line` | `#2E4A75` | `#6E97D0` | The charts |
-| `--group-1` … `--group-5` | navy / red / slate / stone / grey | lighter versions | Whatever dimension your charts split by |
-| `--focus` | `#1B3A63` | `#8FB8EE` | The focus ring |
+| Token | Value | Used for |
+| --- | --- | --- |
+| `--page` | `#F4F5F8` | The ground behind everything |
+| `--card` | `#FFFFFF` | Panels, tiles, the menu, raised surfaces |
+| `--subtle` | `#FAFBFC` | Table headings, row hover, the user block |
+| `--field` | `#EEF0F4` | Inputs, chip backgrounds, tracks |
+| `--ink` / `--ink-2` | `#0F172A` / `#334155` | Body text, then menu rows and table cells |
+| `--muted` | `#5B6878` | Second-line text, labels, captions |
+| `--faint` | `#94A3B8` | Placeholders and inactive icons only — never text to read |
+| `--line` / `--line-soft` | `#E7E9EE` / `#F0F1F4` | Every surface edge, then row dividers |
+| `--navy` / `--navy-deep` / `--navy-lift` | `#0E1B3D` / `#0A142E` / `#24407A` | The identity: the sign-in panel, the banner, the primary button |
+| `--calm` / `--calm-lift` | `#0F3D2A` / `#1B6B47` | The banner when nothing is waiting |
+| `--selected` | `#0E1B3D` | A chosen segment, the avatar |
+| `--current-soft` / `--current-ink` | `#E4EEF7` / `#1B3A63` | The page you are on, in the menu |
+| `--accent` / `--accent-ink` / `--accent-soft` | `#2F6FEB` / `#1D56C9` / `#EAF1FE` | **Movement, and nothing else** |
+| `--bar` | `#2F6FEB` | The charts |
+| `--group-1` … `--group-5` | navy / red / slate / stone / grey | Whatever dimension your charts split by |
+| `--focus` | `#2F6FEB` | The focus ring |
+
+There is one column because there is one theme. Anything that reads like a second theme
+in this file is a mistake; the board is light only.
 
 **A movement chip only colours what the board can call better or worse.** `movement(now, before, { good })` names the direction worth having; passing `good: null` states the move in a neutral `.status-move` chip instead. Volume — how many rows arrived — gets that neutral chip, because more arriving is busier, not better. Standing still is neutral for the same reason.
 
-**Navy is the identity; green is a verb.** The green is not the board's colour — it appears only where something moved against the period before, and it is paired with a red of the same weight for movement the other way. That is why the menu's current page and the avatar have their own `--current-*` and `--selected` tokens rather than borrowing the accent: if the accent shows up anywhere that is not movement, it stops meaning movement.
+**Navy is the identity; the accent is a verb.** The blue accent is not the board's colour — it appears where something moved against the period before, and it is paired with a red of the same weight for movement the other way. That is why the menu's current page and the avatar have their own `--current-*` and `--selected` tokens rather than borrowing the accent: if the accent shows up anywhere that is not movement, it stops meaning movement. The one green on the board is `--calm`, and it means the opposite of movement: nothing is waiting.
 
 **A group colour is a label, not a verdict.** `--group-2` is red because a set of distinguishable colours needs a red in it, not because that group is in trouble. Every chart that splits by group names the colours in its key, and a *state* always lives in a chip or a tinted card — never in a bar or a slice.
 
@@ -45,8 +51,10 @@ The two `theme-color` meta tags in every page head carry the same two grounds, s
 
 Two faces, from Google Fonts — the only external resource the content security policy allows:
 
-- **Archivo** (500/600/700) for headings, figures and anything counted.
-- **IBM Plex Sans** (400/500/600/700) for running text and every control.
+- **Geist** (400/500/600/700) for everything: headings, figures, running text and every control. One face, used at four weights, rather than a pairing that has to be kept in step.
+- **Geist Mono** (500) for a figure that should read like an instrument — the reading on a chart, a key on a keyboard hint.
+
+Both are set as `--heading`, `--body` and `--mono` in `:root`, each with a real fallback stack, so a page still reads if Google Fonts is blocked.
 
 Figures use `font-variant-numeric: tabular-nums` wherever they line up in a column, so a changing number does not shift the ones beside it.
 
@@ -61,8 +69,8 @@ The body face matters more here than any colour. An earlier version of this kit 
 | Token | Size | For |
 | --- | --- | --- |
 | `--radius` | 12px | Surfaces: panels, tiles, cards |
-| `--radius-control` | 7px | Controls: buttons, inputs, selects, the menu, notices, the toast |
-| `--radius-mark` | 3px | Marks: small bars and swatches |
+| `--radius-control` | 10px | Controls: buttons, inputs, selects, the menu, notices, the toast |
+| `--radius-mark` | 4px | Marks: small bars and swatches |
 
 Pills (`999px`) are for chips and counts only; `50%` is for avatars. Nothing else rounds its own corners.
 
@@ -92,9 +100,12 @@ These are design decisions, not missing work. They are the reason the kit exists
 - **The filter bar** — period, group, person and a search, shared through `assets/js/shared/filters.js` so no two pages can count the same selection differently. The state lives in the query string, so a view can be sent to somebody.
 - **Saved views** — a picker and one button, at the end of the filter bar. The button's label is always what pressing it will do: **Save this view** when the selection on screen is not saved, **Remove this view** when it is. Naming takes the row to itself rather than sitting beside the picker, so the bar never offers two ways to do one thing. A view is the page's query string with its parameters sorted, so the same choices made in a different order are the same view. They belong to the page they were saved on, because the same query means different things on two pages with different filters. **They are kept in this browser only** — not shared, not synced, not backed up — and the board says so every time one is saved, along with the thing that does work: the page link already carries the selection.
 - **Drill-down tiles** — `.status-tile` for a state or a band. Opening one puts the step in the hash, so the browser's back button works and a link can be shared.
+- **The drop zone** — `.drop`, on Your data. A dashed edge, and the only dashed edge on the board: everything else is a surface, and this is a place something goes. It fills with `--accent-soft` while a file is over it, which is the one piece of feedback a drag has.
 - **Tables** — `.results`, with an optional tick column. On a phone the heading row is dropped and every cell carries its own heading through `labelCells()`.
 
 **Saved views is the one component the components page does not demonstrate.** A working one there would let somebody save views of a page of examples, which is meaningless; a dead one on a page of live components is worse. It is described here instead.
+
+**What the board is reading is part of the shell, not a page.** The footer line, the state line under the menu and the refresh note all change when the rows do. A board showing somebody's own file must not say "sample data" underneath it, and a board showing the demo must not imply it is showing anything real. Both sentences live in `BOARD`, and both are written twice — once for each case — rather than once and hedged.
 
 ## The three states
 

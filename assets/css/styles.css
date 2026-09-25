@@ -484,6 +484,24 @@ a.menu-item:hover { background: var(--field); color: var(--ink); }
 .view-naming { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .view-naming .search { min-width: 180px; max-width: 220px; }
 
+/* Where a file is dropped. A dashed edge is the one place this board uses one:
+   it is the difference between a surface and a place something goes. */
+.drop {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 28px 20px;
+  border: 2px dashed var(--field-line);
+  border-radius: var(--radius);
+  background: var(--field);
+  text-align: center;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.drop[data-over] { border-color: var(--accent); background: var(--accent-soft); }
+.drop .panel-note { margin: 0; }
+.drop label { cursor: pointer; }
+
 .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 
 .select {

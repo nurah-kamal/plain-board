@@ -5,7 +5,9 @@
 // them, because the day a real source is connected is the wrong day to discover that
 // nothing in the interface knows how to say "that did not load".
 //
-// To connect a real source, replace BoardData.load() and nothing else.
+// To point the board at a file of your own: set BOARD.dataFile, or load one on the
+// Your data page. To connect something that is not a file, replace BoardData.load()
+// and nothing else.
 //
 // Both states can be seen on any page: add ?state=loading or ?state=failed.
 
@@ -16,6 +18,26 @@ const BoardData = {
     const forced = Params.get('state', '');
     if (forced === 'loading') return new Promise(() => {});
     if (forced === 'failed') return Promise.reject(new Error('Forced by ?state=failed, so the state can be seen.'));
+
+    // A board carrying its own file reads it once, keeps it, and reads the page again
+    // with it in place. Everything on this board is computed from the rows at parse
+    // time — that is what stops a headline figure and a chart disagreeing — so rows
+    // that arrive afterwards cannot be folded in without reloading.
+    if (!BOARD_SOURCE && BOARD.dataFile) {
+      return fetch(BOARD.dataFile)
+        .then((answer) => {
+          if (!answer.ok) throw new Error(`${BOARD.dataFile} answered ${answer.status}. The board is looking for it beside these pages, on this same address.`);
+          return answer.text();
+        })
+        .then((text) => {
+          const source = readSource(text, BOARD.dataFile);
+          if (source.error) throw new Error(source.error);
+          const kept = BoardSource.keep(source);
+          if (!kept.kept) throw new Error(kept.why);
+          location.reload();
+          return new Promise(() => {});
+        });
+    }
 
     // The file has already run by the time this does.
     return typeof REQUESTS === 'undefined'

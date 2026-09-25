@@ -10,23 +10,39 @@ const BOARD = {
   // Where a visitor lands after signing in.
   home: 'today.html',
 
+  // A file of rows sitting beside this board on the same address, read the first time
+  // somebody opens the board and kept in their browser after that. null means the board
+  // shows the demo until somebody loads a file on Your data.
+  //
+  // It has to be on this address. The content security policy on every page allows
+  // connections to 'self' only, so a file on another domain — a published sheet, an
+  // API — will not load, by design. Widening that policy is a decision to take on
+  // purpose in tools/build-pages.js, knowing what it opens up.
+  dataFile: null,
+
   // Prefix for the choices this board remembers in the current tab. Give each board
   // its own, or two boards on the same address will read each other's choices.
   storageKey: 'plain-board',
 
-  // One line at the foot of every page, saying what this board is and is not.
-  footer: 'Sample data · read-only. Nothing on this board is connected to a live system.',
+  // One line at the foot of every page, saying what this board is and is not. It has to
+  // change when the rows do: "sample data" printed under somebody's real figures is a
+  // worse lie than no line at all.
+  footer: LOADED
+    ? `Your file, ${LOADED.name || 'loaded here'} · read-only. Read in this browser and kept in this browser.`
+    : 'Sample data · read-only. Nothing on this board is connected to a live system.',
 
   // The refresh button in the page header, and what pressing it says. A board with a
   // live source would reread it here instead; this one is honest about one fixed reading.
   refreshLabel: 'Refresh',
-  refreshNote: () => `Sample figures, so nothing refreshes. The data was read at ${SNAPSHOT.read} and that reading is fixed.`,
+  refreshNote: () => (LOADED
+    ? `A file does not refresh. These rows were read at ${SNAPSHOT.read}, and they stay that reading until another file is loaded on Your data.`
+    : `Sample figures, so nothing refreshes. The data was read at ${SNAPSHOT.read} and that reading is fixed.`),
 
   // The small state line at the foot of the menu.
   state: () => ({
-    text: 'Not connected · read ',
+    text: LOADED ? 'Your file · read ' : 'Not connected · read ',
     value: SNAPSHOT.readShort,
-    title: SNAPSHOT.read
+    title: LOADED ? `${LOADED.name || 'A file you loaded'}, read ${SNAPSHOT.read}` : SNAPSHOT.read
   }),
 
   // The pages that get a place in the bottom bar on phones, as [file, short name].

@@ -1,33 +1,82 @@
 # Plain Board
 
-A starting point for building a small internal board — the kind of page a team actually reads on a Monday morning — in plain HTML, CSS and JavaScript.
+**A small internal reporting board — the kind of page a team reads on a Monday morning — where every figure says what it does not prove.**
 
-No framework. No build step. No dependencies. No chart library. Copy the folder, replace one file of data, and you have a working board.
+**Live demo:** https://nurah-kamal.github.io/plain-board/ — choose **Look around as a manager**, no account needed.
 
-**Live demo:** https://nurah-kamal.github.io/plain-board/
+![The Today page: a banner saying what needs somebody, four figures with their movement, and charts of how long requests have been waiting and where they came from](assets/img/screen-today.png)
 
-The demo is a help desk board: twelve pages across five menu groups, every chart in the kit drawn at least once, and 129 invented requests behind all of it. Choose **Look around as a manager** or **Look around as a team member** — no account needed, and nothing is saved beyond your own browser.
+## What the board shows
 
-Sign in as a team member and the menu changes: their own name is locked into the person filter, and the manager-only page stays visible but shut, labelled rather than hidden.
+Twelve pages, grouped by the question each one answers.
 
-## Why this exists
+| Page | The question it answers |
+| --- | --- |
+| **Today** | What needs somebody right now, and how the four headline figures moved against the period before |
+| **Waiting for a reply** | Which requests have nothing recorded against them, grouped by how long they have waited |
+| **Note quality** | Whether what was written down is enough for the next person to pick the request up |
+| **Channels** | Where requests arrive, and how each channel compares with the period before |
+| **By person** | What each person was given and what came back on it |
+| **Workload** | What is open against each person right now — for balancing, not for judging |
+| **Needs a decision** | What is waiting on a manager, grouped by what has to happen next |
+| **Trends** | Twelve weeks on every measure the board reports |
+| **Sources and coverage** | What the board reads, when it was read, and what it cannot see |
+| **Reading rules** | How every figure is counted, and what each one will not prove |
+| **Components** | Every chart, control and state the kit ships, drawn once with the call that drew it |
+| **Your data** | What the board is reading, and how to point it at your own rows |
 
-Most small internal boards do not need React, a bundler and forty dependencies. They need four pages, some honest figures, a filter bar and a chart that does not lie. That is what this is.
+## The part worth copying
 
-It is also opinionated about one thing: **a figure should say what it does not prove.** Every tile on the demo board carries an (i) that explains what it counts and what it cannot see, and the board has a whole page devoted to what it will not tell you. That is the part worth copying.
+Most boards overclaim. This one is built not to, and the rules are in the product rather than in a document:
 
-## What you get
+- **A figure says what it does not prove.** Every tile carries an (i) with its counting rule and its limit. A tile without one is not finished.
+- **Blank is not proof.** A row with nothing recorded means nobody wrote anything down — not that nothing happened. Every figure that counts blanks says so beside itself.
+- **A comparison refuses itself** when there is no honest period behind it, rather than comparing against a shorter, unfair stretch.
+- **A percentage is not printed off a base too small to support it.** Two requests becoming eight is not a 300% improvement, it is six requests — so the chip reads `2 to 8`.
+- **A change is only coloured where the board can call a direction better or worse.** Volume gets a neutral chip: more arriving is busier, not better.
+- **A table caps at 200 rows and names what it capped.** The export still saves everything.
+- **Nothing scores or ranks a person.** Note quality is measured on length alone, because length is the only thing the text can honestly be read for.
+
+There is a whole page — **Reading rules** — devoted to what the board will not tell you.
+
+![Waiting for a reply: requests grouped into wait bands, with a table of the band that is open](assets/img/screen-requests.png)
+
+## Your own rows
+
+The demo ships with 129 invented requests. To put your own in front of it, open **Your data** and drop a CSV or JSON file on the page.
+
+![The Your data page: what the board is reading, a drop zone for a file, and the columns it looks for](assets/img/screen-data.png)
+
+- **The file is read in this browser and kept in this browser.** It is not uploaded — there is no server to upload it to, and the content security policy on every page would not allow one to be reached.
+- **Headings are matched loosely.** `Reference`, `Opened`, `Assigned To`, `Hours to reply` and a dozen other spellings are understood; anything the board does not read is left alone and named back to you.
+- **What it refused is reported as carefully as what it took** — how many lines, and why each one was refused. A refused line is left out of every figure rather than counted as a zero.
+- **A board you deploy can carry its own file.** Set `BOARD.dataFile` in `assets/js/shared/board.js` to a CSV sitting beside the board. It must be on the same address: the content security policy allows connections to `'self'` only, which rules out a published sheet or an API unless you widen that policy on purpose.
+
+For anything that is not a file, replace `BoardData.load()` in `assets/js/shared/loading.js` and nothing else changes. Every page already goes through waiting, ready and failed — see them on any page with `?state=loading` or `?state=failed`.
+
+## Saved views
+
+A selection worth coming back to can be named and kept: the picker at the end of the filter bar, and one button that says either **Save this view** or **Remove this view**, depending on whether what is on screen is already saved.
+
+- **A saved view lives in that browser.** It is not shared, synced or backed up.
+- **To send somebody a view, send them the page link.** The filters are in the address bar already, which is the part that does travel.
+
+![Trends: twelve weeks of one measure as an area chart, with a table of every week and every measure](assets/img/screen-trends.png)
+
+## How it is built
+
+No framework. No build step. No dependencies. No chart library. Every chart on those pages is drawn in SVG by one file, with no library behind it.
 
 | | |
 | --- | --- |
 | **The shell** | Left menu, phone bottom bar, page header, board-wide search, sign-out, toast, footer |
-| **Charts** | Ring, donut, area with a key and a pointer reading, paired bars, bar list, column chart, sparkline — drawn in SVG, no library |
-| **Tables** | Row ticking with export of only the ticked rows, and cells that carry their own heading on a phone |
-| **Controls** | Segmented period picker, filter bar, drill-down tiles with the step kept in the address bar |
-| **Tooling** | One script to build every page from a single shell, one to version assets before a commit |
-| **One theme** | Light, from the Service Board design system. These boards are read at a desk and on a projector, so there is no dark mode to maintain |
+| **Charts** | Ring, donut, area with a key and a pointer reading, paired bars, bar list, column chart, sparkline |
+| **Tables** | Row ticking with export of only the ticked rows, click-to-sort, and cells that carry their own heading on a phone |
+| **Controls** | Segmented period picker, filter bar, saved views, drill-down tiles with the step kept in the address bar |
+| **States** | Waiting, ready and failed, all three drawn — plus a printed form for when the board goes into a meeting |
+| **Tooling** | One script to rename the board, one to build every page from a single shell, one to version assets before a commit |
 
-Every one of these is drawn on the demo's **Components** page, with the call that drew it underneath. That is the fastest way to see what is in the box.
+Every one of these is drawn on the **Components** page with the call that drew it underneath. That is the fastest way to see what is in the box.
 
 ## Try it on your own machine
 
@@ -41,22 +90,19 @@ Then open the address it prints.
 
 ## Making it your own
 
-**Start with the name.** It lives in five places, and a copy that is called two things
-reads as a copy:
+**Start with the name.** It lives in five places, and a copy that is called two things reads as a copy:
 
-```
+```bash
 node tools/new-board.js "Intake board" --team "Admissions"
 ```
 
-That renames the board, the small word under it in the menu, the page titles and the
-prefix it remembers choices under, then rebuilds every page. It does not touch the
-data — that part is below, and it is the real work.
+That renames the board, the small word under it in the menu, the page titles and the prefix it remembers choices under, then rebuilds every page.
 
 Then four files, in this order:
 
-**1. `assets/js/shared/data.js`** — your rows, and the helpers that read them. This is the only file that knows what the board is about. Replace it entirely.
+**1. `assets/js/shared/data.js`** — the demo rows, and the helpers that read them. Replace them, or leave them and load a file on **Your data** instead.
 
-**2. `assets/js/shared/board.js`** — the board's name, its home page, the footer line, what the phone tab bar holds, and one search function. The shell reads this and follows it, so nothing else needs to know your subject.
+**2. `assets/js/shared/board.js`** — the board's name, its home page, the footer line, what the phone tab bar holds, and one search function. The shell reads this and follows it.
 
 **3. `tools/build-pages.js`** — the page list, the menu, and the markup of each page. Add a page here rather than writing a new HTML file by hand, then run:
 
@@ -74,49 +120,6 @@ node tools/stamp-assets.js
 
 This appends a content hash to every asset link. GitHub Pages lets a browser keep a stylesheet or a script for ten minutes; without this step a visitor can load your new markup beside your old script, and a control that is on screen does nothing. It is the least obvious bug in the whole kit, so the tool exists to make it impossible.
 
-## Connecting your own data
-
-The demo reads a file, so it is ready the moment the page parses. Every page still goes through three states — waiting, ready, failed — because the day you connect a real source is the wrong day to discover that nothing in the interface knows how to say "that did not load".
-
-Replace one function in `assets/js/shared/loading.js`:
-
-```js
-const BoardData = {
-  load() {
-    return fetch('/your/data.json')
-      .then((r) => r.ok ? r.json() : Promise.reject(new Error(`The source answered ${r.status}.`)))
-      .then((rows) => { REQUESTS = rows; });
-  }
-};
-```
-
-Nothing else changes. Every page already calls `startPage(render)`, which hides the content, shows a stand-in, and either renders or shows a failure with a **Try again** button.
-
-See both states on any page:
-
-```bash
-# append to any page's address
-?state=loading
-?state=failed
-```
-
-Tables cap at 200 rows and say what they capped, so a source with fifty thousand rows degrades into a readable page rather than a frozen one.
-
-## Saved views
-
-A selection worth coming back to can be named and kept: the picker at the end of the
-filter bar, and one button that says either **Save this view** or **Remove this view**,
-depending on whether what is on screen is already saved.
-
-Two things it does not do, both said in the page rather than only here:
-
-- **A saved view lives in that browser.** It is not shared, synced or backed up, and
-  clearing site data removes it.
-- **To send somebody a view, send them the page link.** The filters are in the address
-  bar already, which is the part that does travel.
-
-Views belong to the page they were saved on, and the board keeps twelve of them.
-
 ## Things worth knowing
 
 **Every script shares one scope.** There is no module system, so two files declaring the same `const` will silently kill a page. Keep names distinct across `shared/` and `pages/`.
@@ -125,11 +128,11 @@ Views belong to the page they were saved on, and the board keeps twelve of them.
 
 **The demo sign-in is a demonstration.** It remembers a sample person in `localStorage` and nothing more. Replace `assets/js/shared/session.js` when you connect real accounts, and do not treat the manager/member split as a security boundary — it decides what is drawn, not what is allowed.
 
-**Roles are drawn, not hidden.** A team member's person filter is set to their own name and locked, rather than removed, and a manager-only page stays in their menu labelled **Managers** rather than vanishing. Showing the rule reads better than quietly leaving a control out — and a link that silently bounces somebody is worse than either.
+**Roles are drawn, not hidden.** A team member's person filter is set to their own name and locked rather than removed, and a manager-only page stays in their menu labelled **Managers** rather than vanishing. Showing the rule reads better than quietly leaving a control out.
 
-**A figure formatted for reading does not sort the way it reads.** `1d` is longer than `20h` but sorts before it on text, so a formatted cell carries its raw value: `numberCell('1d', 26)`. Then `sortableTable(table)` makes every heading clickable.
+**A figure formatted for reading does not sort the way it reads.** `1d` is longer than `20h` but sorts before it on text, so a formatted cell carries its raw value: `numberCell('1d', 26)`.
 
-**A percentage off a tiny base is not information.** Two requests becoming eight is not a 300% improvement, it is six requests. Below a base of five, `movement()` prints `2 to 8` instead.
+**One theme, deliberately.** Light, from the Service Board design system. These boards are read at a desk and on a projector, so there is no dark mode to maintain.
 
 ## Folders
 
@@ -137,8 +140,10 @@ Views belong to the page they were saved on, and the board keeps twelve of them.
 index.html               sign in
 pages/                   the signed-in pages, all generated
 assets/css/styles.css    the whole design
-assets/js/shared/        data.js, board.js, app.js (the shell), charts.js, filters.js, loading.js, session.js, auth.js
+assets/js/shared/        source.js (your rows), data.js (the demo), board.js, app.js (the shell),
+                         charts.js, filters.js, views.js, loading.js, session.js, auth.js
 assets/js/pages/         one script per page
+assets/img/              the logo and the screenshots above
 tools/new-board.js       renames the board everywhere it is named
 tools/build-pages.js     builds every page from one shell
 tools/stamp-assets.js    versions every asset link before a commit
