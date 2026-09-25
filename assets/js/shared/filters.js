@@ -56,10 +56,6 @@ function showFilterNote(id, rows) {
 
   const clear = document.getElementById('filters-clear');
   if (clear) clear.hidden = !active.length && filterState.range === 'month';
-
-  // The selection has just been redrawn, so the saved-views button checks whether its
-  // label is still true.
-  refreshSavedViews();
 }
 
 function clearFilters(redraw) {
@@ -137,10 +133,6 @@ function setUpFilters(redraw) {
 
   const clear = document.getElementById('filters-clear');
   if (clear) clear.addEventListener('click', () => clearFilters(redraw));
-
-  // A selection worth coming back to can be kept. It lives in views.js, which knows
-  // nothing about what these filters mean — only what the address bar says.
-  buildSavedViews();
 }
 
 // The words a request's state gets, wherever it is shown.

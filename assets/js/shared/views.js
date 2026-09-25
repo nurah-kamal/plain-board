@@ -17,7 +17,13 @@ const Views = {
   // on two pages with different filters.
   key() {
     const page = location.pathname.split('/').pop().replace('.html', '') || 'index';
-    return `${BOARD.storageKey}:views:${page}`;
+    // Four boards share one address on GitHub Pages, so the key has to name the board
+    // as well as the page. A board carrying a BOARD config says its own name; one that
+    // does not is identified by the folder it is served from.
+    const board = (typeof BOARD !== 'undefined' && BOARD.storageKey)
+      || location.pathname.split('/').filter(Boolean)[0]
+      || 'board';
+    return `${board}:views:${page}`;
   },
 
   // Everything here is wrapped: a browser in private mode throws on the first read.
@@ -179,4 +185,16 @@ function buildSavedViews() {
   holder.replaceChildren(label, picker, action, naming);
   refreshSavedViews = () => { if (naming.hidden) draw(); };
   draw();
+}
+
+// The control has to notice when the selection moves, and no two boards change their
+// filters through the same code. What they do share is the address bar: every filter
+// on every board is written there with history.replaceState, which fires no event. So
+// the control listens to the one thing it can — that call — rather than asking each
+// board to remember to tell it.
+{
+  const replace = history.replaceState.bind(history);
+  history.replaceState = (...args) => { replace(...args); refreshSavedViews(); };
+  addEventListener('popstate', () => refreshSavedViews());
+  addEventListener('DOMContentLoaded', buildSavedViews);
 }
