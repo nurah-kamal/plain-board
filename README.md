@@ -41,7 +41,18 @@ Then open the address it prints.
 
 ## Making it your own
 
-Four files, in this order:
+**Start with the name.** It lives in five places, and a copy that is called two things
+reads as a copy:
+
+```
+node tools/new-board.js "Intake board" --team "Admissions"
+```
+
+That renames the board, the small word under it in the menu, the page titles and the
+prefix it remembers choices under, then rebuilds every page. It does not touch the
+data — that part is below, and it is the real work.
+
+Then four files, in this order:
 
 **1. `assets/js/shared/data.js`** — your rows, and the helpers that read them. This is the only file that knows what the board is about. Replace it entirely.
 
@@ -113,6 +124,7 @@ pages/                   the signed-in pages, all generated
 assets/css/styles.css    the whole design
 assets/js/shared/        data.js, board.js, app.js (the shell), charts.js, filters.js, loading.js, session.js, auth.js
 assets/js/pages/         one script per page
+tools/new-board.js       renames the board everywhere it is named
 tools/build-pages.js     builds every page from one shell
 tools/stamp-assets.js    versions every asset link before a commit
 ```
