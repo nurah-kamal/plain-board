@@ -486,6 +486,12 @@ a.menu-item:hover { background: var(--field); color: var(--ink); }
 
 /* Where a file is dropped. A dashed edge is the one place this board uses one:
    it is the difference between a surface and a place something goes. */
+/* The two columns the board cannot do without, said before the drop zone rather
+   than in a table under it. */
+.needs { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.needs code { padding: 1px 6px; border-radius: var(--radius-mark); background: var(--field); font-family: var(--mono); font-size: 13px; }
+.drop-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
 .drop {
   display: grid;
   justify-items: center;

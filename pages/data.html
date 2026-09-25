@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=096e430a">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=3ab210e3">
   <script src="../assets/js/shared/session.js?v=35de28c7"></script>
 </head>
 <body>
@@ -116,10 +116,14 @@
             <h2 id="load-title">Give it your own rows</h2>
           </div>
           <p class="panel-note">The file is read here, in this browser, and kept here. It is not uploaded: there is no server to upload it to, and the content security policy on every page of this board would not allow one to be reached.</p>
+          <p class="needs"><b>Two columns are needed:</b> one that names each row — <code>id</code>, <code>ref</code>, <code>ticket</code>, <code>number</code> or <code>case</code> — and one that says when it arrived: <code>arrived</code>, <code>date</code>, <code>opened</code>, <code>created</code>, <code>received</code> or <code>raised</code>. Everything else is optional, and nothing has to be renamed: the full list of headings is at the foot of this page.</p>
           <div class="drop" id="drop">
             <p><b>Drop a CSV or JSON file here</b></p>
             <p class="panel-note">or</p>
-            <label class="button button-secondary button-inline" for="file">Choose a file</label>
+            <div class="drop-actions">
+              <label class="button button-secondary button-inline" for="file">Choose a file</label>
+              <button class="button button-secondary button-inline" id="example" type="button">Download an example file</button>
+            </div>
             <input class="sr-only" id="file" type="file" accept=".csv,.json,text/csv,application/json">
           </div>
           <div id="outcome"></div>
@@ -148,6 +152,6 @@
   <script src="../assets/js/shared/filters.js?v=d339fa9a"></script>
   <script src="../assets/js/shared/views.js?v=2fb3dd97"></script>
   <script src="../assets/js/shared/loading.js?v=03bcb8d6"></script>
-  <script src="../assets/js/pages/data.js?v=4097fd21"></script>
+  <script src="../assets/js/pages/data.js?v=5547bf69"></script>
 </body>
 </html>

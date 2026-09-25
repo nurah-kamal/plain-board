@@ -5,27 +5,49 @@ setUpShell();
 // it counts what it refused as carefully as what it took.
 
 const COLUMN_HELP = [
-  ['id', 'ref, reference, ticket, number, case', 'Needed. What a row is called, so it can be pointed at.'],
-  ['arrived', 'date, opened, created, received, raised', 'Needed, unless days is given. A day-first date, or an ISO one.'],
-  ['days', 'days ago, age', 'Instead of arrived: whole days back from today.'],
-  ['product', 'group, category, type, service, queue', 'What the board splits by. Missing rows are grouped as Ungrouped.'],
-  ['person', 'owner, assignee, assigned to, handler, agent', 'Who it sits with. Missing reads as Nobody recorded.'],
-  ['channel', 'source, via, received by', 'How it arrived. Missing reads as Not recorded.'],
-  ['reply', 'reply hours, hours to reply, response hours', 'Hours to the first reply. Blank means nothing was recorded, which is not the same as no reply.'],
-  ['replied', 'first reply, responded, answered at', 'Instead of reply: the board works the hours out from arrived.'],
-  ['state', 'status', 'open, answered or closed. Worked out from reply when it is missing.'],
-  ['note', 'notes, comment, summary, detail, description', 'What was written down. The board measures its length, never its content.']
+  ['id', 'needed', 'ref, reference, ticket, number, case', 'What a row is called, so it can be pointed at.'],
+  ['arrived', 'needed', 'date, opened, created, received, raised', 'A day-first date, or an ISO one. Give days instead if you prefer.'],
+  ['days', 'or this', 'days ago, age', 'Instead of arrived: whole days back from today.'],
+  ['product', 'optional', 'group, category, type, service, queue', 'What the board splits by. Missing rows are grouped as Ungrouped.'],
+  ['person', 'optional', 'owner, assignee, assigned to, handler, agent', 'Who it sits with. Missing reads as Nobody recorded.'],
+  ['channel', 'optional', 'source, via, received by', 'How it arrived. Missing reads as Not recorded.'],
+  ['reply', 'optional', 'reply hours, hours to reply, response hours', 'Hours to the first reply. Blank means nothing was recorded, which is not the same as no reply.'],
+  ['replied', 'optional', 'first reply, responded, answered at', 'Instead of reply: the board works the hours out from arrived.'],
+  ['state', 'optional', 'status', 'open, answered or closed. Worked out from reply when it is missing.'],
+  ['note', 'optional', 'notes, comment, summary, detail, description', 'What was written down. The board measures its length, never its content.']
 ];
+
+const NEED_TONE = { needed: 'changed', 'or this': 'waiting', optional: 'good' };
+
+// A file to start from, so nobody has to build one out of the table above. It carries
+// the headings the board looks for and three rows showing the shapes that matter: a
+// reply recorded, nothing recorded, and a note long enough to be worth reading.
+function downloadExample() {
+  const today = new Date();
+  const day = (back) => new Date(today.getFullYear(), today.getMonth(), today.getDate() - back).toISOString().slice(0, 10);
+
+  downloadRows(
+    'example-rows',
+    ['id', 'arrived', 'product', 'person', 'channel', 'reply', 'state', 'note'],
+    [
+      ['REQ-001', day(1), 'Admissions', 'A. Mokoena', 'Email', 3, 'answered', 'Called back and confirmed the documents that are still outstanding.'],
+      ['REQ-002', day(6), 'Finance', 'B. Petersen', 'Phone', '', 'open', ''],
+      ['REQ-003', day(20), 'IT support', 'C. Dlamini', 'Walk-in', 26, 'closed', 'Reset and confirmed working.']
+    ]
+  );
+}
 
 function showColumns() {
   const body = document.querySelector('#columns tbody');
-  body.replaceChildren(...COLUMN_HELP.map(([name, aliases, what]) => {
+  body.replaceChildren(...COLUMN_HELP.map(([name, need, aliases, what]) => {
     const row = create('tr');
     const first = create('td');
     first.append(create('b', '', name));
-    const second = create('td', 'cell-name', aliases);
-    const third = create('td', '', what);
-    row.append(first, second, third);
+    const second = create('td');
+    second.append(statusChip({ tone: NEED_TONE[need], text: need }));
+    const third = create('td', 'cell-name', aliases);
+    const fourth = create('td', '', what);
+    row.append(first, second, third, fourth);
     return row;
   }));
 }
@@ -145,6 +167,7 @@ function setUpDrop() {
   const drop = document.getElementById('drop');
   const field = document.getElementById('file');
 
+  document.getElementById('example').addEventListener('click', downloadExample);
   field.addEventListener('change', () => take(field.files[0]));
 
   ['dragenter', 'dragover'].forEach((name) => drop.addEventListener(name, (event) => {

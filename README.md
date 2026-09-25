@@ -48,7 +48,9 @@ The demo ships with 129 invented requests. To put your own in front of it, open 
 ![The Your data page: what the board is reading, a drop zone for a file, and the columns it looks for](assets/img/screen-data.png)
 
 - **The file is read in this browser and kept in this browser.** It is not uploaded — there is no server to upload it to, and the content security policy on every page would not allow one to be reached.
-- **Headings are matched loosely.** `Reference`, `Opened`, `Assigned To`, `Hours to reply` and a dozen other spellings are understood; anything the board does not read is left alone and named back to you.
+- **Two columns are needed, and the page says so before you drop anything:** one that names each row (`id`, `ref`, `ticket`, `number`, `case`) and one that says when it arrived (`arrived`, `date`, `opened`, `created`, `received`, `raised`). Everything else is optional and has a sensible default.
+- **Nothing has to be renamed.** Headings are matched however they are spelled, cased, spaced, hyphenated or underscored — `Assigned To`, `Hours to reply`, `Received by` are all understood. Anything the board does not read is left alone and named back to you.
+- **There is an example file to start from.** The Your data page will hand you a CSV with the right headings and three rows in it, so you can line your own export up against something real rather than against a table.
 - **What it refused is reported as carefully as what it took** — how many lines, and why each one was refused. A refused line is left out of every figure rather than counted as a zero.
 - **A board you deploy can carry its own file.** Set `BOARD.dataFile` in `assets/js/shared/board.js` to a CSV sitting beside the board. It must be on the same address: the content security policy allows connections to `'self'` only, which rules out a published sheet or an API unless you widen that policy on purpose.
 

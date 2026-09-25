@@ -424,10 +424,14 @@ ${filters()}
             <h2 id="load-title">Give it your own rows</h2>
           </div>
           <p class="panel-note">The file is read here, in this browser, and kept here. It is not uploaded: there is no server to upload it to, and the content security policy on every page of this board would not allow one to be reached.</p>
+          <p class="needs"><b>Two columns are needed:</b> one that names each row — <code>id</code>, <code>ref</code>, <code>ticket</code>, <code>number</code> or <code>case</code> — and one that says when it arrived: <code>arrived</code>, <code>date</code>, <code>opened</code>, <code>created</code>, <code>received</code> or <code>raised</code>. Everything else is optional, and nothing has to be renamed: the full list of headings is at the foot of this page.</p>
           <div class="drop" id="drop">
             <p><b>Drop a CSV or JSON file here</b></p>
             <p class="panel-note">or</p>
-            <label class="button button-secondary button-inline" for="file">Choose a file</label>
+            <div class="drop-actions">
+              <label class="button button-secondary button-inline" for="file">Choose a file</label>
+              <button class="button button-secondary button-inline" id="example" type="button">Download an example file</button>
+            </div>
             <input class="sr-only" id="file" type="file" accept=".csv,.json,text/csv,application/json">
           </div>
           <div id="outcome"></div>
