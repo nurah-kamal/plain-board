@@ -99,20 +99,20 @@ fill('tile-list', [
       const holder = create('div', 'tiles');
       holder.append(
         statTile({
-          label: 'Requests', icon: ICONS.rows, tone: 'is-info',
+          label: 'Requests',
           value: '129', note: '6 people · 3 channels',
           change: { direction: 'up', tone: 'well', text: '18% on the previous 4 weeks' },
           spark: [12, 15, 11, 18, 16, 22], sparkLabel: 'Six weeks',
           about: 'One row per request, counted once. It is what the board holds, not what was sent.'
         }),
         statTile({
-          label: 'Nothing recorded', icon: ICONS.alert, tone: 'is-warn',
+          label: 'Nothing recorded',
           value: '23', note: 'longest has waited 72 days',
           change: { direction: 'down', tone: 'well', text: '9% on the previous 4 weeks' },
           spark: [14, 11, 16, 12, 10, 8], sparkLabel: 'Six weeks'
         }),
         statTile({
-          label: 'Hours to first reply', icon: ICONS.clock, tone: 'is-good',
+          label: 'Hours to first reply',
           value: '4h', note: 'the middle value, not the average'
         })
       );
@@ -299,11 +299,13 @@ fill('state-list', [
       holder.append(
         statusChip(movement(8, 2, { good: 'up' })),
         statusChip(movement(31, 17, { good: 'up' })),
-        statusChip(movement(10, 14, { good: 'up' }))
+        statusChip(movement(10, 14, { good: 'up' })),
+        statusChip(movement(31, 17, { good: null })),
+        statusChip(movement(17, 17, { good: 'up' }))
       );
       return holder;
     })(),
-    "movement(now, before, { good: 'up' })\n// under a base of 5 it reads '2 to 8' instead of '+300%'"),
+    "movement(now, before, { good: 'up' | 'down' | null })\n// under a base of 5 it reads '2 to 8' instead of '+300%'\n// good: null states the move without calling it good or bad"),
 
   demo('Waiting for data', 'A stand-in with the shape of what is coming, so the page does not jump when it lands. No spinner — a spinner says "wait" without saying what for.',
     (() => {

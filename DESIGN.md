@@ -31,11 +31,13 @@ The two `theme-color` meta tags in every page head carry the same two grounds, s
 | `--group-1` … `--group-5` | navy / red / slate / stone / grey | lighter versions | Whatever dimension your charts split by |
 | `--focus` | `#1B3A63` | `#8FB8EE` | The focus ring |
 
+**A movement chip only colours what the board can call better or worse.** `movement(now, before, { good })` names the direction worth having; passing `good: null` states the move in a neutral `.status-move` chip instead. Volume — how many rows arrived — gets that neutral chip, because more arriving is busier, not better. Standing still is neutral for the same reason.
+
 **Navy is the identity; green is a verb.** The green is not the board's colour — it appears only where something moved against the period before, and it is paired with a red of the same weight for movement the other way. That is why the menu's current page and the avatar have their own `--current-*` and `--selected` tokens rather than borrowing the accent: if the accent shows up anywhere that is not movement, it stops meaning movement.
 
 **A group colour is a label, not a verdict.** `--group-2` is red because a set of distinguishable colours needs a red in it, not because that group is in trouble. Every chart that splits by group names the colours in its key, and a *state* always lives in a chip or a tinted card — never in a bar or a slice.
 
-**The three status colours** carry meaning and are used nowhere decorative: red for stop, yellow for hold, green for go. On a chip they are `.status-stop`, `.status-hold` and `.status-good`; on a **Where to start** link they are `.is-stop` and `.is-hold`. Both draw from the same tokens, so one severity reads the same wherever it appears. There is deliberately no second green class — `.status-good` already is it.
+**The three status colours** carry meaning and are used nowhere decorative: red for stop, yellow for hold, green for go. On a chip they are `.status-stop`, `.status-hold` and `.status-good`; on a banner item they are `.is-stop` and `.is-hold`. Both draw from the same tokens, so one severity reads the same wherever it appears. There is deliberately no second green class — `.status-good` already is it.
 
 **Contrast.** Every text colour measures at least 4.5:1 against the surface behind it, measured against its own tint rather than against the page.
 
@@ -83,9 +85,10 @@ These are design decisions, not missing work. They are the reason the kit exists
 
 - **The menu** — a light column on `--card`, held off the page by a hairline. The page you are on is a soft navy pill with a thin navy ring, drawn from `--current-soft`; everything else is `--muted` until hovered. A page the viewer may not open stays in the list, greyed, with a **Managers** tag. The gaps, padding and row height are sized against the window with `clamp()`, with two `max-height` steps for a short laptop screen, so the menu does not scroll. A finger still gets a 44px row through `@media (pointer: coarse)`.
 - **The page header** — the page name, its one-line note, the board search and the refresh button, closed by a hairline. It is built in the script rather than read from the markup, so a browser holding an older copy of the HTML still gets the current header.
-- **`.tile`** — a figure with its name, a note, a sparkline of the run behind it and an (i). On `--card`, edged with a hairline.
+- **One visible search at a time.** A page that filters its own rows already has a field for it, so the board-wide search folds into a button carrying the key that opens it (`/`). Two fields side by side, doing different jobs and looking alike, told a first-time reader nothing. Escape shuts it, clears it and puts focus back on the button.
+- **`.tile`** — a figure with its name, a note, a sparkline of the run behind it and an (i). On `--card`, edged with a hairline. No icon and no tone badge: the colour on a tile belongs to the movement chip, which is read from the figures, rather than to a mark that was fixed per tile and said the same thing whatever the number did.
 - **The landing page reads as a summary.** The four figures come first and are set larger than figures anywhere else, because they are the answer. Then what needs somebody, then the controls to change the selection, then the detail. A reader who stops after two seconds has still had the point.
-- **Where to start** — a row of counts under the figures, above the filters, each a link into the right group. It counts only what is true right now, and disappears when there is nothing to do.
+- **The banner** — one to a page, at the top of the landing page, above the figures. The loudest thing waiting becomes the figure and the sentence; whatever else is waiting becomes the line under it. Every count is true right now and the link goes to the group it names. With nothing waiting it says so on a calm green rather than disappearing, because "nothing is waiting" is an answer and a blank space is not.
 - **The filter bar** — period, group, person and a search, shared through `assets/js/shared/filters.js` so no two pages can count the same selection differently. The state lives in the query string, so a view can be sent to somebody.
 - **Drill-down tiles** — `.status-tile` for a state or a band. Opening one puts the step in the hash, so the browser's back button works and a link can be shared.
 - **Tables** — `.results`, with an optional tick column. On a phone the heading row is dropped and every cell carries its own heading through `labelCells()`.

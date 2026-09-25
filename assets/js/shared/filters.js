@@ -44,15 +44,15 @@ function activeFilters() {
   ].filter(Boolean);
 }
 
-// One line under the filters saying what is on screen and what is narrowing it.
+// One line under the filters saying how much is on screen. It does not repeat the
+// period: the chip above it is already showing which one is selected.
 function showFilterNote(id, rows) {
   const holder = document.getElementById(id);
   if (!holder) return;
   const active = activeFilters();
-  const period = `the last ${rangeLabel().toLowerCase()}`;
   holder.textContent = active.length
-    ? `${plural(rows.length, 'request', 'requests')} · ${period} · filtered by ${active.join(' and ')}`
-    : `${plural(rows.length, 'request', 'requests')} · ${period}`;
+    ? `${plural(rows.length, 'request', 'requests')} · filtered by ${active.join(' and ')}`
+    : plural(rows.length, 'request', 'requests');
 
   const clear = document.getElementById('filters-clear');
   if (clear) clear.hidden = !active.length && filterState.range === 'month';
@@ -141,10 +141,5 @@ const STATE_WORDS = {
   answered: ['Replied to', 'waiting'],
   closed: ['Closed', 'good']
 };
-
-function stateChip(request) {
-  const [text, tone] = STATE_WORDS[request.state];
-  return statusChip({ tone, text });
-}
 
 const waitingWords = (days) => (days === 0 ? 'Today' : days === 1 ? '1 day' : `${formatNumber(days)} days`);

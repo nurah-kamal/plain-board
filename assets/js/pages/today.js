@@ -57,16 +57,18 @@ function showTiles(rows) {
 
   const tiles = [
     {
-      label: 'Requests', icon: ICONS.rows, tone: 'is-info',
+      label: 'Requests',
       value: formatNumber(rows.length),
-      change: comparable ? movement(rows.length, before.length, { good: 'up', suffix: since }) : null,
+      // More requests arriving is not better or worse, it is busier, so the chip
+      // states the move and stops there.
+      change: comparable ? movement(rows.length, before.length, { good: null, suffix: since }) : null,
       note: `${plural(new Set(rows.map((request) => request.person)).size, 'person', 'people')} · ${plural(new Set(rows.map((request) => request.channel)).size, 'channel', 'channels')}`,
       spark: TRENDS.opened,
       sparkLabel: 'Requests opened in each of the last six weeks',
       about: 'One row per request, counted once. It is what the board holds, not what was sent — nothing here checks that every request arrived. The change compares this period with the same length of time immediately before it.'
     },
     {
-      label: 'Answered within a day', icon: ICONS.check, tone: 'is-good',
+      label: 'Answered within a day',
       value: shareNow === null ? '—' : `${shareNow}%`,
       change: comparable && shareNow !== null && shareBefore !== null
         ? movement(shareNow, shareBefore, { good: 'up', suffix: since })
@@ -77,7 +79,7 @@ function showTiles(rows) {
       about: 'Counted only on requests that have a recorded reply. A request nobody wrote anything against cannot be measured at all, so it is left out rather than counted as slow.'
     },
     {
-      label: 'Nothing recorded', icon: ICONS.alert, tone: 'is-warn',
+      label: 'Nothing recorded',
       value: formatNumber(waiting.length),
       change: comparable ? movement(waiting.length, unanswered(before).length, { good: 'down', suffix: since }) : null,
       note: waiting.length ? `longest has waited ${waitingWords(Math.max(...waiting.map((request) => request.days))).toLowerCase()}` : 'everything has a reply recorded',
@@ -86,7 +88,7 @@ function showTiles(rows) {
       about: 'Requests with no reply written against them. It does not prove nobody replied — only that nobody wrote it down. A recent period always looks worse, because there has been less time for anybody to write anything.'
     },
     {
-      label: 'Hours to first reply', icon: ICONS.clock, tone: 'is-info',
+      label: 'Hours to first reply',
       value: middle === null ? '—' : formatHours(middle),
       change: comparable && middle !== null && beforeMiddle !== null
         ? movement(middle, beforeMiddle, { good: 'down', suffix: since })

@@ -13,7 +13,6 @@ function showTiles(rows, before, comparable) {
 
     return {
       label: channel,
-      icon: ICONS.mail,
       tone: index === 0 ? 'is-info' : index === 1 ? 'is-good' : 'is-warn',
       value: formatNumber(own.length),
       change: comparable ? movement(own.length, earlier) : null,

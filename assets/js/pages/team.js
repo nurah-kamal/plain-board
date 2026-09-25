@@ -30,25 +30,25 @@ function showTiles(rows) {
 
   const tiles = [
     {
-      label: 'People', icon: ICONS.person, tone: 'is-info',
+      label: 'People',
       value: formatNumber(people),
       note: plural(all.given, 'request', 'requests') + ' between them',
       about: 'Everyone with at least one request in this selection. Somebody with none does not appear.'
     },
     {
-      label: 'Replies recorded', icon: ICONS.note, tone: 'is-good',
+      label: 'Replies recorded',
       value: all.given ? formatPercent(all.answered / all.given) : '—',
       note: `${formatNumber(all.answered)} of ${formatNumber(all.given)}`,
       about: 'A status, a note or a recorded reply on the row. It does not prove the customer was reached, or that the reply was any good.'
     },
     {
-      label: 'Nothing recorded', icon: ICONS.alert, tone: 'is-warn',
+      label: 'Nothing recorded',
       value: formatNumber(all.waiting),
       note: all.overAWeek ? `${formatNumber(all.overAWeek)} waiting over a week` : 'none waiting over a week',
       about: 'Requests with no reply written against them. It proves nobody wrote it down, not that nobody replied.'
     },
     {
-      label: 'Hours to first reply', icon: ICONS.clock, tone: 'is-info',
+      label: 'Hours to first reply',
       value: all.middle === null ? '—' : formatHours(all.middle),
       note: 'the middle value across everyone shown',
       about: 'The middle value, not the average, so one very slow request cannot drag it.'

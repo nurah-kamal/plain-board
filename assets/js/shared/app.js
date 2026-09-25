@@ -11,23 +11,6 @@ function create(tag, className, text) {
 
 const initials = (name) => name.split(/\s+/).map((word) => word[0]).slice(0, 2).join('').toUpperCase();
 
-// Page choices live in this tab only, so nothing ends up in the address bar
-function remember(key, value) {
-  try {
-    sessionStorage.setItem(`${BOARD.storageKey}-${key}`, value);
-  } catch {
-    // The page still works, it just won't remember the choice.
-  }
-}
-
-function recall(key) {
-  try {
-    return sessionStorage.getItem(`${BOARD.storageKey}-${key}`);
-  } catch {
-    return null;
-  }
-}
-
 // Redrawing a list replaces its buttons, which would drop keyboard focus back to the top of the page.
 // Buttons carry a data-focus key so focus can land on the matching one again.
 function keepFocus(redraw, fallback) {
@@ -75,6 +58,7 @@ function icon(paths, size = 18) {
 }
 
 const ICONS = {
+  search: ['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M20 20l-4.2-4.2'],
   sort: ['M8 5.5v13', 'M5 9l3-3.5L11 9', 'M16 18.5v-13', 'M13 15l3 3.5 3-3.5'],
   check: ['M4 12.5l5 5L20 6.5'],
   back: ['M19 12H5', 'M11 18l-6-6 6-6'],
@@ -373,23 +357,6 @@ const Params = {
   }
 };
 
-// The same way back on every page that opens into tiles: the page, then each step you took
-function buildTrail(container, steps, onStep) {
-  container.replaceChildren();
-  steps.forEach((step, index) => {
-    if (index) {
-      const mark = create('span', 'trail-mark', '›');
-      mark.setAttribute('aria-hidden', 'true');
-      container.append(mark);
-    }
-    const button = create('button', 'trail-step', step.label);
-    button.type = 'button';
-    if (!index) button.prepend(icon(ICONS.back, 15));
-    button.addEventListener('click', () => onStep(step.path));
-    container.append(button);
-  });
-}
-
 // Downloads exactly the rows on screen, so a filtered view exports filtered
 function downloadRows(name, headings, rows) {
   const quote = (value) => `"${String(value).replace(/"/g, '""')}"`;
@@ -484,12 +451,13 @@ function exportButton(label, build) {
 }
 
 let tileCount = 0;
-function statTile({ label, value, note, icon: paths, tone = '', change, spark, sparkLabel, sparkMark = 'newest', about }) {
+function statTile({ label, value, note, change, spark, sparkLabel, sparkMark = 'newest', about }) {
   const tile = create('div', 'tile');
   const badge = create('div', 'tile-badge');
   const name = create('span', '', label);
   badge.append(name);
 
+  let explain = null;
   if (about) {
     tileCount += 1;
     const id = `tile-about-${tileCount}`;
@@ -501,7 +469,7 @@ function statTile({ label, value, note, icon: paths, tone = '', change, spark, s
     ask.append(icon(ICONS.about, 15));
     name.append(ask);
 
-    const explain = create('p', 'tile-about', about);
+    explain = create('p', 'tile-about', about);
     explain.id = id;
     explain.hidden = true;
     ask.addEventListener('click', () => {
@@ -509,26 +477,6 @@ function statTile({ label, value, note, icon: paths, tone = '', change, spark, s
       ask.setAttribute('aria-expanded', String(!explain.hidden));
     });
     tile.dataset.hasAbout = 'true';
-    tile.append(badge);
-    if (paths) {
-      const mark = create('span', ('tile-icon ' + tone).trim());
-      mark.append(icon(paths, 18));
-      badge.append(mark);
-    }
-    const figure = create('div', 'tile-figure');
-    figure.append(create('b', '', value));
-    if (spark) figure.append(sparkline(spark, sparkLabel || label, sparkMark));
-    const foot = create('div', 'tile-foot');
-    if (change) foot.append(statusChip(change));
-    if (note) foot.append(create('small', '', note));
-    tile.append(figure, foot, explain);
-    return tile;
-  }
-
-  if (paths) {
-    const mark = create('span', ('tile-icon ' + tone).trim());
-    mark.append(icon(paths, 18));
-    badge.append(mark);
   }
 
   const figure = create('div', 'tile-figure');
@@ -540,6 +488,7 @@ function statTile({ label, value, note, icon: paths, tone = '', change, spark, s
   if (note) foot.append(create('small', '', note));
 
   tile.append(badge, figure, foot);
+  if (explain) tile.append(explain);
   return tile;
 }
 
@@ -560,6 +509,19 @@ function boardResults(term) {
 
 function buildSearch() {
   const holder = create('div', 'board-search');
+  holder.dataset.open = 'false';
+
+  // Shut until it is wanted. The page keeps one visible field — the one that filters
+  // the list in front of you — and this one is a button with the key that opens it
+  // written on its face.
+  const trigger = create('button', 'search-open');
+  trigger.type = 'button';
+  trigger.setAttribute('aria-expanded', 'false');
+  trigger.append(
+    icon(ICONS.search, 16),
+    create('span', '', 'Search the board'),
+    create('kbd', '', '/')
+  );
 
   const label = create('label', 'sr-only', 'Search the board');
   label.htmlFor = 'board-search-input';
@@ -580,6 +542,23 @@ function buildSearch() {
     list.hidden = true;
     field.setAttribute('aria-expanded', 'false');
   };
+
+  // Folding it away also clears it, so it never reopens holding somebody's last search.
+  const shut = (giveFocusBack) => {
+    close();
+    field.value = '';
+    holder.dataset.open = 'false';
+    trigger.setAttribute('aria-expanded', 'false');
+    if (giveFocusBack) trigger.focus();
+  };
+
+  const open = () => {
+    holder.dataset.open = 'true';
+    trigger.setAttribute('aria-expanded', 'true');
+    field.focus();
+  };
+
+  trigger.addEventListener('click', open);
 
   const draw = () => {
     const results = boardResults(field.value);
@@ -606,17 +585,31 @@ function buildSearch() {
   field.addEventListener('input', draw);
   field.addEventListener('focus', draw);
   field.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') { field.value = ''; close(); }
+    if (event.key === 'Escape') { event.stopPropagation(); shut(true); }
     if (event.key === 'ArrowDown' && !list.hidden) {
       const first = list.querySelector('a');
       if (first) { event.preventDefault(); first.focus(); }
     }
   });
   document.addEventListener('click', (event) => {
-    if (!holder.contains(event.target)) close();
+    if (holder.contains(event.target)) return;
+    // Leave it open if somebody typed into it and clicked away; fold it only when
+    // there is nothing in it to lose.
+    if (field.value.trim()) close();
+    else shut(false);
   });
 
-  holder.append(label, field, list);
+  // "/" is the way into a board-wide search everywhere else, so it is the way in here.
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) return;
+    const on = document.activeElement;
+    const typing = on && (on.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(on.tagName));
+    if (typing) return;
+    event.preventDefault();
+    open();
+  });
+
+  holder.append(trigger, label, field, list);
   return holder;
 }
 
@@ -760,7 +753,6 @@ function setUpShell() {
   return user;
 }
 
-
 // The one banner a page is allowed. It takes the same items the "Where to start"
 // band builds — count, words, href, tone — so nothing new has to be worked out.
 // The loudest becomes the figure and the sentence; the rest become the line under it.
@@ -815,14 +807,3 @@ function buildBanner(items, options) {
 
 const capitalise = (words) => words.charAt(0).toUpperCase() + words.slice(1);
 
-// The live line under the page title: what the board is reading and what needs attention.
-function buildStatusLine(parts) {
-  const line = create('p', 'status-line');
-  (parts || []).forEach((part, index) => {
-    if (index) line.append(document.createTextNode(' \u00b7 '));
-    if (part.bold) line.append(create('b', '', part.text));
-    else if (part.warn) line.append(create('span', 'is-warn', part.text));
-    else line.append(document.createTextNode(part.text));
-  });
-  return line;
-}

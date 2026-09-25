@@ -199,12 +199,16 @@ const plural = (count, one, many) => `${formatNumber(count)} ${count === 1 ? one
 // becoming eight is not a 300% improvement, it is six requests.
 const TOO_FEW_TO_BE_A_PERCENTAGE = 5;
 
+// `good` names the direction worth having. Pass null when neither direction is
+// worth having — volume, headcount, anything the board counts without judging — and
+// the change is stated in a neutral chip instead of a green or a red one. Standing
+// still is neutral as well: it is not good news, it is no news.
 function movement(now, before, { good = 'up', suffix = '' } = {}) {
   if (before === null || before === undefined || !before) return null;
-  if (now === before) return { tone: 'good', text: `no change${suffix}` };
+  if (now === before) return { tone: 'move', text: `no change${suffix}` };
 
   const direction = now > before ? 'up' : 'down';
-  const tone = direction === good ? 'well' : 'poor';
+  const tone = good === null ? 'move' : direction === good ? 'well' : 'poor';
 
   // Small numbers swing wildly. Show them as they are rather than dressing them
   // up as a percentage nobody should act on.
@@ -213,7 +217,7 @@ function movement(now, before, { good = 'up', suffix = '' } = {}) {
   }
 
   const share = (now - before) / before;
-  if (Math.abs(share) < 0.005) return { tone: 'good', text: `no change${suffix}` };
+  if (Math.abs(share) < 0.005) return { tone: 'move', text: `no change${suffix}` };
   return { direction, tone, text: `${formatPercent(Math.abs(share))}${suffix}` };
 }
 

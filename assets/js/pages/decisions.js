@@ -69,19 +69,19 @@ function showTiles(all) {
   const open = unanswered(REQUESTS);
   const tiles = [
     {
-      label: 'Waiting on a decision', icon: ICONS.alert, tone: 'is-warn',
+      label: 'Waiting on a decision',
       value: formatNumber(all.length),
       note: all.length === 1 ? 'one group' : `${formatNumber(all.length)} groups`,
       about: 'A group appears only when there is something in it. An empty board here means nothing needs a manager today, not that nothing is happening.'
     },
     {
-      label: 'Requests involved', icon: ICONS.rows, tone: 'is-info',
+      label: 'Requests involved',
       value: formatNumber(new Set(all.flatMap((group) => group.rows.map((request) => request.id))).size),
       note: 'counted once, even where two groups name the same request',
       about: 'A request can sit in more than one group. This counts it once, so the figure cannot be inflated by adding groups.'
     },
     {
-      label: 'Open right now', icon: ICONS.clock, tone: 'is-info',
+      label: 'Open right now',
       value: formatNumber(open.length),
       note: open.length ? `oldest waiting ${waitingWords(Math.max(...open.map((request) => request.days))).toLowerCase()}` : 'nothing open',
       about: 'Every request with nothing recorded against it, regardless of age. This page does not filter by period, because a decision does not expire.'
