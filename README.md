@@ -25,7 +25,7 @@ It is also opinionated about one thing: **a figure should say what it does not p
 | **Tables** | Row ticking with export of only the ticked rows, and cells that carry their own heading on a phone |
 | **Controls** | Segmented period picker, filter bar, drill-down tiles with the step kept in the address bar |
 | **Tooling** | One script to build every page from a single shell, one to version assets before a commit |
-| **Both themes** | Light and dark, defined once as tokens, with a switch in the menu — and a third setting that follows the device |
+| **One theme** | Light, from the Service Board design system. These boards are read at a desk and on a projector, so there is no dark mode to maintain |
 
 Every one of these is drawn on the demo's **Components** page, with the call that drew it underneath. That is the fastest way to see what is in the box.
 

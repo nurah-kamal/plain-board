@@ -117,15 +117,14 @@ const shell = (page, body) => `<!doctype html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; form-action 'self'; base-uri 'self'; object-src 'none'">
-  <meta name="theme-color" content="#F4F6F8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0B1017" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F4F5F8" media="(prefers-color-scheme: light)">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" content="${page.description}">
   <title>${page.title} · ${BOARD_NAME}</title>
   <link rel="icon" href="../assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="../assets/css/styles.css">
   <script src="../assets/js/shared/session.js"></script>
 </head>
@@ -186,9 +185,9 @@ ${body}
 
 // The body of each page: the markup its script fills in.
 const BODIES = {
-  today: `        <section class="tiles tiles-four tiles-lead" id="tiles" aria-label="Totals"></section>
+  today: `        <div class="start-here" id="start-here"></div>
 
-        <nav class="start-here" id="start-here" aria-label="Where to start"></nav>
+        <section class="tiles tiles-four tiles-lead" id="tiles" aria-label="Totals"></section>
 
 ${filters()}
 

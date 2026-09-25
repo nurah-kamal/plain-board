@@ -139,23 +139,24 @@ fill('tile-list', [
     })(),
     "statusChip({ tone, text, direction })\n// tone: good | waiting | changed | well | poor | info\n// direction: 'up' | 'down' adds an arrow and a screen-reader word"),
 
-  demo('Where to start', 'Counts that are true right now, each a link into the group it names. It disappears when there is nothing to do.',
+  demo('The banner', 'One to a page, at the top of the landing page. The loudest thing becomes the figure and the sentence; whatever else is waiting becomes the line under it. Every count is true right now and the link goes to the group it names.',
     (() => {
-      const holder = create('nav', 'start-here');
-      holder.append(create('b', 'start-lead', 'Where to start'));
-      [
-        ['is-stop', '5', 'requests have waited over a week with nothing recorded'],
-        ['is-hold', '9', 'replies were recorded in a single word']
-      ].forEach(([tone, count, words]) => {
-        const link = create('a', `start-item ${tone}`);
-        link.href = '#';
-        link.addEventListener('click', (event) => event.preventDefault());
-        link.append(create('b', '', count), create('span', '', words));
-        holder.append(link);
+      const holder = create('div', 'demo-stack');
+      const live = buildBanner([
+        { count: 5, one: 'request has waited over a week with nothing recorded', many: 'requests have waited over a week with nothing recorded', tone: 'is-stop', href: '#' },
+        { count: 9, one: 'reply was recorded in a single word', many: 'replies were recorded in a single word', tone: 'is-hold' }
+      ], { action: 'Open the waiting list' });
+      live.querySelector('.banner-link').addEventListener('click', (event) => event.preventDefault());
+
+      // The calm one is the state nobody designs for, so it is shown rather than described.
+      const calm = buildBanner([], {
+        calmTitle: 'Nothing in this selection is waiting on anybody.',
+        calmNote: 'Every request here has a reply recorded against it.'
       });
+      holder.append(live, calm);
       return holder;
     })(),
-    "// plain markup: .start-here > b.start-lead + a.start-item.is-stop | .is-hold"),
+    "buildBanner(items, { action, calmTitle, calmNote })\n// items: { count, one, many, tone, href }\n// no item with a count left standing gives the calm banner"),
 
   demo('Drill-down tile', 'A group you open. The step goes in the address bar, so back works and a link can be shared.',
     (() => {

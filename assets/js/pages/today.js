@@ -28,20 +28,11 @@ function showStart(rows) {
   ].filter((item) => item.count);
 
   const holder = document.getElementById('start-here');
-  holder.replaceChildren();
-
-  if (!items.length) {
-    holder.append(create('p', 'start-empty', 'Nothing in this selection is waiting on anybody.'));
-    return;
-  }
-
-  holder.append(create('b', 'start-lead', 'Where to start'));
-  items.forEach((item) => {
-    const link = create('a', `start-item ${item.tone}`);
-    link.href = item.href;
-    link.append(create('b', '', formatNumber(item.count)), create('span', '', item.count === 1 ? item.one : item.many));
-    holder.append(link);
-  });
+  holder.replaceChildren(buildBanner(items, {
+    action: 'Open the waiting list',
+    calmTitle: 'Nothing in this selection is waiting on anybody.',
+    calmNote: 'Every request here has a reply recorded against it.'
+  }));
 }
 
 function showTiles(rows) {

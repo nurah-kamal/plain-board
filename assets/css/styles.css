@@ -1,151 +1,69 @@
 :root {
-  color-scheme: light dark;
-  --page: #F4F6F8;
+  color-scheme: light;
+  --page: #F4F5F8;
   --card: #FFFFFF;
-  --field: #EDF0F4;
-  --ink: #0F1826;
-  --muted: #56637A;
-  --line: #DCE2EA;
-  --navy: #16243C;
-  --navy-deep: #0C1524;
+  --field: #EEF0F4;
+  --ink: #0F172A;
+  --muted: #5B6878;
+  --line: #E7E9EE;
+  --navy: #0E1B3D;
+  --navy-deep: #0A142E;
   --navy-lift: #24406A;
-  --accent: #1B7F5F;
-  --accent-ink: #14654B;
-  --accent-soft: #E3F0EA;
-  --focus: #1B3A63;
-  --now: #14654B;
-  --bar: #2E4A75;
-  --field-line: #7A8699;
-  --selected: #16243C;
+  --accent: #2F6FEB;
+  --accent-ink: #1D56C9;
+  --accent-soft: #EAF1FE;
+  --focus: #2F6FEB;
+  --now: #1D56C9;
+  --bar: #2F6FEB;
+  --field-line: #D5D9E0;
+  --selected: #0E1B3D;
   --on-selected: #FFFFFF;
   --on-accent: #FFFFFF;
-  --info-soft: #E4EEF7;
-  --info-ink: #27456D;
-  --error: #A32B23;
+  --info-soft: #EAF1FE;
+  --info-ink: #1D56C9;
+  --error: #C81E1E;
   --on-navy: #FFFFFF;
-  --on-navy-muted: rgba(255, 255, 255, .8);
-  --heading: "Archivo", "Segoe UI", system-ui, sans-serif;
-  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --on-navy-muted: rgba(255, 255, 255, .72);
+  --heading: "Geist", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --body: "Geist", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
   /* Three shapes, and nothing else: a surface, a control, a mark. Pills are for chips only. */
   --radius: 12px;
-  --radius-control: 7px;
-  --radius-mark: 3px;
+  --radius-control: 10px;
+  --radius-mark: 4px;
+  --subtle: #FAFBFC; /* Mist: table headers, row hover, the user block. */
+  --line-soft: #F0F1F4; /* Soft hairline: table row dividers, a card foot rule. */
+  --segment-track: #E9ECF1; /* The track behind the segmented control. */
+  --bar-track: #EDEFF3; /* The empty part of every meter. */
+  --navy-lift: #24407A; /* Top of the primary button and brand mark gradients. */
+  --navy-mid: #13295A; /* Middle stop of the banner gradient. */
+  --navy-end: #2B4F93; /* Right end of the banner gradient. */
+  --calm: #0F3D2A; /* The banner when nothing is waiting. */
+  --calm-lift: #1B6B47; /* Right end of the calm banner gradient. */
+  --faint: #94A3B8; /* Placeholders and inactive icons only, never text to read. */
+  --ink-2: #334155; /* Secondary text: menu rows, table cells, neutral pill text. */
+  --mono: "Geist Mono", ui-monospace, "Cascadia Mono", monospace; /* Figures that should read like an instrument. */
+  --shadow-focus: 0 0 0 3px rgba(47, 111, 235, .25); /* Fields on focus, with an accent border. */
   /* The page you are on. Its own colour, because --accent now means movement only. */
   --current-soft: #E4EEF7;
   --current-ink: #1B3A63;
   --current-line: #A9C2DE;
-  --shell: 0 0 0 1px var(--line);
-  --ring-accent: #2E4A75;
-  --ring-good: #1B7F5F;
-  --ring-warn: #A8551F;
-  --chart-line: #2E4A75;
-  --chart-fill: rgba(46, 74, 117, .12);
+  --shell: 0 1px 2px rgba(15, 23, 42, .05);
+  --ring-accent: #2F6FEB;
+  --ring-good: #22A55A;
+  --ring-warn: #F0A020;
+  --chart-line: #2F6FEB;
+  --chart-fill: rgba(47, 111, 235, .22);
   --group-1: #24527E;
   --group-2: #A3382C;
   --group-3: #4C7A93;
   --group-4: #7A6A55;
   --group-5: #8892A1;
-  --slice-1: #24527E;
-  --slice-2: #16243C;
-  --slice-3: #6B8FB5;
-  --slice-4: #A8814A;
-  --slice-5: #9AA4B2;
+  --slice-1: #2F6FEB;
+  --slice-2: #0E1B3D;
+  --slice-3: #7C9BD0;
+  --slice-4: #A9B7CC;
+  --slice-5: #CBD5E1;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --page: #0B1017;
-    --card: #131A24;
-    --field: #1B2430;
-    --ink: #E8EDF4;
-    --muted: #9BA8BA;
-    --line: #26303D;
-    --navy: #16243C;
-    --navy-deep: #0C1524;
-  --navy-lift: #24406A;
-    --accent: #46C79B;
-    --accent-ink: #86DCBB;
-    --accent-soft: #152B24;
-    --focus: #8FB8EE;
-    --now: #86DCBB;
-    --bar: #6E97D0;
-    --field-line: #6E7C8F;
-    --selected: #2E4A75;
-    --on-selected: #FFFFFF;
-    --info-soft: #16253A;
-    --info-ink: #B7CDE8;
-    --error: #F08A7E;
-    --shell: 0 0 0 1px var(--line);
-    --current-soft: #1B2C44;
-    --current-ink: #A7C3E2;
-    --current-line: #3A5A85;
-    --ring-accent: #6E97D0;
-    --ring-good: #46C79B;
-    --ring-warn: #E3A06C;
-    --chart-line: #6E97D0;
-    --chart-fill: rgba(110, 151, 208, .16);
-    --group-1: #5E93C8;
-    --group-2: #E2786A;
-    --group-3: #7FA8C4;
-    --group-4: #BCA98A;
-    --group-5: #93A0B0;
-    --slice-1: #5E93C8;
-    --slice-2: #A7C3E2;
-    --slice-3: #2E4A75;
-    --slice-4: #D9B36B;
-    --slice-5: #8A96A6;
-  }
-
-  select.input,
-  .select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%239AA7B4' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E"); }
-}
-
-/* The same, for somebody who chose dark on a light machine. */
-:root[data-theme="dark"] {
-    --page: #0B1017;
-    --card: #131A24;
-    --field: #1B2430;
-    --ink: #E8EDF4;
-    --muted: #9BA8BA;
-    --line: #26303D;
-    --navy: #16243C;
-    --navy-deep: #0C1524;
-  --navy-lift: #24406A;
-    --accent: #46C79B;
-    --accent-ink: #86DCBB;
-    --accent-soft: #152B24;
-    --focus: #8FB8EE;
-    --now: #86DCBB;
-    --bar: #6E97D0;
-    --field-line: #6E7C8F;
-    --selected: #2E4A75;
-    --on-selected: #FFFFFF;
-    --info-soft: #16253A;
-    --info-ink: #B7CDE8;
-    --error: #F08A7E;
-    --shell: 0 0 0 1px var(--line);
-    --current-soft: #1B2C44;
-    --current-ink: #A7C3E2;
-    --current-line: #3A5A85;
-    --ring-accent: #6E97D0;
-    --ring-good: #46C79B;
-    --ring-warn: #E3A06C;
-    --chart-line: #6E97D0;
-    --chart-fill: rgba(110, 151, 208, .16);
-    --group-1: #5E93C8;
-    --group-2: #E2786A;
-    --group-3: #7FA8C4;
-    --group-4: #BCA98A;
-    --group-5: #93A0B0;
-    --slice-1: #5E93C8;
-    --slice-2: #A7C3E2;
-    --slice-3: #2E4A75;
-    --slice-4: #D9B36B;
-    --slice-5: #8A96A6;
-  }
-
-:root[data-theme="dark"] select.input,
-:root[data-theme="dark"] .select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%239AA7B4' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E"); }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -968,6 +886,7 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
 .demo-what { color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 62ch; }
 .demo-stage { padding: 18px; border-radius: var(--radius); background: var(--page); overflow-x: auto; }
 .demo-stage > .tiles { min-width: 0; }
+.demo-stack { display: grid; gap: 14px; }
 .demo-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .demo-menu { max-width: 260px; padding: 8px; border-radius: var(--radius-control); background: var(--card); }
 .demo-code { margin: 0; padding: 14px 16px; border-radius: var(--radius-control); background: var(--navy); color: var(--on-navy-muted); font-size: 13px; line-height: 1.6; overflow-x: auto; }
@@ -983,12 +902,6 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
 .results thead th.is-sorted .sort-button { color: var(--accent-ink); }
 .results thead th.is-sorted .sort-button svg { opacity: 1; }
 @media (pointer: coarse) { .sort-button { padding: 14px 10px; } }
-
-.theme-switch { display: flex; align-items: center; gap: 6px; padding: 6px; margin-top: 10px; border-radius: var(--radius-control); background: var(--field); }
-.theme-switch button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 30px; padding: 0 8px; border: 0; border-radius: calc(var(--radius-control) - 4px); background: none; color: var(--muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-.theme-switch button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shell); }
-.theme-switch button:hover { color: var(--ink); }
-@media (pointer: coarse) { .theme-switch button { min-height: 40px; } }
 
 .menu-item.is-shut { color: var(--muted); cursor: default; opacity: .72; }
 .menu-item.is-shut:hover { background: none; }
@@ -1110,43 +1023,16 @@ h1 { letter-spacing: -.022em; }
 
 /* Three status colours for the Decide first cards */
 :root {
-  --red-soft: #FBE6E2;
-  --red-line: #E5B7AE;
-  --red-ink: #97331F;
-  --yellow-soft: #FAF0C9;
-  --yellow-line: #E1CE8B;
-  --yellow-ink: #74580C;
-  --green-soft: #DCEFE2;
-  --green-line: #AFD4BC;
-  --green-ink: #2A5E3E;
+  --red-soft: #FDECEC;
+  --red-line: #F6C9C9;
+  --red-ink: #C81E1E;
+  --yellow-soft: #FEF4E2;
+  --yellow-line: #F3DDB4;
+  --yellow-ink: #A64B07;
+  --green-soft: #E8F6EE;
+  --green-line: #BFE3CE;
+  --green-ink: #15803D;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --red-soft: #2C1A18;
-    --red-line: #4E2E28;
-    --red-ink: #F3A79B;
-    --yellow-soft: #2A2617;
-    --yellow-line: #48412A;
-    --yellow-ink: #E8CE86;
-    --green-soft: #1A271C;
-    --green-line: #314935;
-    --green-ink: #A8CFA5;
-  }
-}
-
-/* The same, for somebody who chose dark on a light machine. */
-:root[data-theme="dark"] {
-    --red-soft: #2C1A18;
-    --red-line: #4E2E28;
-    --red-ink: #F3A79B;
-    --yellow-soft: #2A2617;
-    --yellow-line: #48412A;
-    --yellow-ink: #E8CE86;
-    --green-soft: #1A271C;
-    --green-line: #314935;
-    --green-ink: #A8CFA5;
-  }
 
 /* Decide first: one group per status, and the card itself carries the colour */
 /* Decide first: one tile per group, opened to read the cards inside */
@@ -1458,31 +1344,172 @@ tbody tr:has(.cell-pick input:checked) { background: var(--accent-soft); }
   .controls .search, .controls .button { grid-column: 1 / -1; }
 }
 
-/* Where to start: the counts that are waiting on a manager, each one a way in */
-.start-here { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-.start-lead { flex: none; font-size: 15px; font-weight: 700; }
-.start-item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 7px;
-  padding: 7px 13px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--card);
-  color: var(--ink);
-  font-size: 14px;
-  text-decoration: none;
-  transition: border-color .15s ease, background-color .15s ease;
-}
-.start-item b { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.start-item:hover { background: var(--field); border-color: var(--field-line); }
-.start-item.is-stop b { color: var(--red-ink); }
-.start-item.is-hold b { color: var(--yellow-ink); }
-.start-note, .start-empty { font-size: 14px; color: var(--muted); }
+/* Where the banner sits, and anything said quietly under it */
+.start-here { display: grid; gap: 10px; }
+.start-note { font-size: 14px; color: var(--muted); }
 
-@media (max-width: 560px) {
-  /* Two to a row, so what is waiting still fits above the first figure */
-  .start-here { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .start-lead, .start-note, .start-empty { grid-column: 1 / -1; }
-  .start-item { align-items: flex-start; gap: 6px; padding: 8px 12px; line-height: 1.3; }
+/* ===========================================================================
+   Service Board
+   The system this board follows. Its rules, in the order the brand book states
+   them: a hairline before a shadow; state colour reserved for state; one navy.
+   =========================================================================== */
+
+/* Hairline first. A card is defined by its border, and hover strengthens that
+   border rather than lifting the card. */
+.panel, .tile, .status-tile, .card, .note-card { border: 1px solid var(--line); box-shadow: var(--shell); }
+.panel:hover, .tile:hover { border-color: var(--line); }
+.status-tile:hover { border-color: var(--line-strong, #D5D9E0); background: var(--subtle); box-shadow: var(--shadow-hover, 0 2px 8px rgba(15, 23, 42, .06)); }
+
+/* The sidebar is white against the grey canvas, edged not shadowed. */
+.sidebar { background: var(--card); border-right: 1px solid var(--line); box-shadow: none; }
+.menu-item { color: var(--ink-2); font-weight: 500; border: 1px solid transparent; border-radius: 9px; }
+.menu-item svg { color: var(--faint); }
+.menu-item:hover { background: var(--page); color: var(--ink); }
+.menu-item[aria-current="page"] {
+  background: var(--card);
+  border-color: var(--line);
+  box-shadow: var(--shell);
+  color: var(--ink);
+  font-weight: 600;
+}
+.menu-item[aria-current="page"] svg { color: var(--navy); }
+.menu-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+/* Figures read like figures. */
+.tile-figure b, .status-count b, .column-value, .ring-value {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.03em;
+  font-weight: 650;
+}
+h1 { letter-spacing: -.02em; font-weight: 650; }
+
+/* Pills carry words, and only these five fills exist. */
+.status { min-height: 24px; padding: 0 9px; font-size: 12px; font-weight: 600; }
+.status-good, .status-well, .status-up { background: var(--green-soft); color: var(--green-ink); }
+.status-waiting, .status-hold { background: var(--yellow-soft); color: var(--yellow-ink); }
+.status-changed, .status-poor, .status-down, .status-stop { background: var(--red-soft); color: var(--red-ink); }
+.status-info { background: var(--accent-soft); color: var(--accent-ink); }
+
+/* Tables: sentence-case headers on mist, soft dividers, mist on hover. */
+.results th { background: var(--subtle); border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.results td, .results tbody th { border-bottom: 1px solid var(--line-soft); font-size: 14px; }
+.results tbody tr:hover > * { background: var(--subtle); }
+
+/* Controls. */
+.button { min-height: 36px; border-radius: var(--radius-control); font-weight: 600; }
+.button:not(.button-secondary) { border: 0; background: linear-gradient(180deg, var(--navy-lift), var(--navy)); color: var(--on-navy); box-shadow: 0 1px 2px rgba(14, 27, 61, .25), inset 0 1px 0 rgba(255, 255, 255, .12); }
+.button:not(.button-secondary):hover { background: var(--navy); }
+.button-secondary { border: 1px solid var(--line); background: var(--card); color: var(--ink); box-shadow: var(--shell); }
+.button-secondary:hover { background: var(--subtle); border-color: var(--field-line); }
+.select, .search, .input { border-radius: var(--radius-control); border: 1px solid var(--line); background: var(--card); box-shadow: var(--shell); }
+.select:focus, .search:focus, .input:focus { outline: 0; border-color: var(--accent); box-shadow: var(--shadow-focus); }
+.segmented { background: var(--segment-track); border-radius: 10px; padding: 3px; }
+.segmented button { border-radius: 8px; font-weight: 500; color: var(--muted); }
+.segmented button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(15, 23, 42, .12); }
+
+/* Meters and tracks. */
+.track { background: var(--bar-track); border-radius: 999px; }
+.track-fill { border-radius: 999px; }
+
+/* The system's own note on --muted: "4.8:1 on card, 4.6:1 on subtle; only 4.4:1 on
+   page, so keep small muted text on cards." These four sit on the page canvas, so they
+   take --ink-2, which the system provides for exactly this. Measured 4.37:1 before. */
+.page-note, .start-note, .page-foot, .panel-note { color: var(--ink-2); }
+/* Inside a card it sits on white or mist, where muted is 4.8:1 and correct. */
+.panel .panel-note, .tile .panel-note, .status-tile .panel-note, .card .panel-note { color: var(--muted); }
+
+/* An unpressed segment sits on the segment track, not on a card: 4.02:1 as muted. */
+.segmented button { color: var(--ink-2); }
+.segmented button:hover { color: var(--ink); }
+
+/* Grey secondary text on a state-tinted card measured 3.97:1, and grey on a coloured
+   surface is wrong besides: the supporting line takes the tint's own ink. */
+.decision-card.is-stop small, .decision-card.is-stop .panel-note,
+[class*="is-stop"] > small { color: var(--red-ink); }
+[class*="is-hold"] > small { color: var(--yellow-ink); }
+[class*="is-go"] > small, [class*="is-good"] > small { color: var(--green-ink); }
+
+/* The system's neutral pill is --field fill with --ink-2 text, not muted. */
+.tag { color: var(--ink-2); }
+.decide-tile small, .decide-tile .panel-note { color: var(--ink-2); }
+
+/* Focus, on everything. */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+::selection { background: var(--accent-soft); color: var(--ink); }
+
+/* ---------------------------------------------------------------------------
+   The one banner per page. It says what needs somebody, as a sentence with the
+   figure in it. When nothing is waiting it turns green rather than disappearing,
+   because "nothing is waiting" is itself worth reading.
+   --------------------------------------------------------------------------- */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: linear-gradient(100deg, var(--navy) 0%, var(--navy-mid) 55%, var(--navy-end) 100%);
+  color: var(--on-navy);
+}
+.banner.is-calm { background: linear-gradient(100deg, var(--calm), var(--calm-lift)); }
+.banner-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.banner-figure {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
+}
+.banner h2 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; }
+.banner p { margin: 4px 0 0; color: var(--on-navy-muted); font-size: 14px; line-height: 1.5; }
+.banner p b { color: var(--on-navy); font-weight: 600; }
+.banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-control);
+  background: var(--card);
+  color: var(--navy);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.banner-link:hover { background: var(--subtle); }
+.banner-link svg { width: 14px; height: 14px; }
+
+/* The live line under the page title. */
+.status-line { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.status-line b { color: var(--ink); font-weight: 600; }
+.status-line .is-warn { color: var(--yellow-ink); font-weight: 500; }
+
+/* The greeting, and the filters beside it. */
+.greet-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 16px; }
+.greet { margin: 0; color: var(--ink-2); font-size: 14px; }
+.greet .is-good { color: var(--green-ink); font-weight: 600; }
+.greet .is-late { color: var(--yellow-ink); font-weight: 600; }
+
+/* A figure card closes with its base on the left and what is late on the right. */
+.tile-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 12px;
+  color: var(--muted);
+}
+.tile-foot b { font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.tile-foot b.is-late { color: var(--red-ink); }
+
+@media (max-width: 900px) {
+  .banner { flex-direction: column; align-items: flex-start; }
+  .banner-figure { font-size: 34px; }
+  .banner-link { align-self: stretch; justify-content: center; }
 }

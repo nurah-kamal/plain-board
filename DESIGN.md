@@ -1,12 +1,17 @@
 # How this board is built
 
+> **This board follows the Service Board design system.** Its tokens, type, spacing,
+> radii and component rules come from there, so any board built on the kit reads as
+> the same thing. Where this file and the system disagree, the system wins — except
+> for the one deviation recorded under Colour.
+
 One design, written down so it can be followed rather than guessed at. If you copy the kit and add a page, this is the agreement you are keeping.
 
 ## Colour
 
 Colours live as custom properties on `:root` in `assets/css/styles.css`. Nothing in the stylesheet uses a raw colour value; if you need a new colour, it becomes a token first.
 
-Because the theme can be chosen as well as inherited, the dark values are declared **twice**: once inside `@media (prefers-color-scheme: dark)`, guarded as `:root:not([data-theme="light"])` so a chosen light theme beats a dark machine, and once as `:root[data-theme="dark"]` so a chosen dark theme beats a light one. Three states have to work — light chosen, dark chosen, and nothing chosen. A token added to only one of those blocks is the bug this arrangement invites, so add it to both.
+The system is light only. These boards are read at a desk in office light and on meeting-room projectors, so there is no dark theme to keep in step.
 
 The two `theme-color` meta tags in every page head carry the same two grounds, so the browser's own bar matches the page it sits above.
 
@@ -32,7 +37,7 @@ The two `theme-color` meta tags in every page head carry the same two grounds, s
 
 **The three status colours** carry meaning and are used nowhere decorative: red for stop, yellow for hold, green for go. On a chip they are `.status-stop`, `.status-hold` and `.status-good`; on a **Where to start** link they are `.is-stop` and `.is-hold`. Both draw from the same tokens, so one severity reads the same wherever it appears. There is deliberately no second green class — `.status-good` already is it.
 
-**Contrast.** Every text colour measures at least 4.5:1 against the surface behind it, in both themes, measured against its own tint rather than against the page.
+**Contrast.** Every text colour measures at least 4.5:1 against the surface behind it, measured against its own tint rather than against the page.
 
 ## Type
 

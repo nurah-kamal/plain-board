@@ -75,9 +75,6 @@ function icon(paths, size = 18) {
 }
 
 const ICONS = {
-  sun: ['M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7', 'M12 2.5v2', 'M12 19.5v2', 'M4.2 4.2l1.4 1.4', 'M18.4 18.4l1.4 1.4', 'M2.5 12h2', 'M19.5 12h2', 'M4.2 19.8l1.4-1.4', 'M18.4 5.6l1.4-1.4'],
-  moon: ['M20 14.5A8.5 8.5 0 1 1 9.5 4a6.6 6.6 0 0 0 10.5 10.5z'],
-  auto: ['M3.5 5.5h17v11h-17z', 'M9 20h6', 'M12 16.5V20'],
   sort: ['M8 5.5v13', 'M5 9l3-3.5L11 9', 'M16 18.5v-13', 'M13 15l3 3.5 3-3.5'],
   check: ['M4 12.5l5 5L20 6.5'],
   back: ['M19 12H5', 'M11 18l-6-6 6-6'],
@@ -699,42 +696,6 @@ function markClosedPages(sidebar, user) {
   });
 }
 
-// Light and dark, with a third state that is the honest default: follow the machine.
-// The chosen one is remembered in this browser only.
-function buildThemeSwitch(sidebar) {
-  const holder = create('div', 'theme-switch');
-  holder.setAttribute('role', 'group');
-  holder.setAttribute('aria-label', 'Theme');
-
-  const options = [
-    ['light', 'Light', ICONS.sun],
-    ['dark', 'Dark', ICONS.moon],
-    [null, 'Auto', ICONS.auto]
-  ];
-
-  const draw = () => {
-    const current = readTheme();
-    [...holder.children].forEach((button, index) => {
-      button.setAttribute('aria-pressed', String(options[index][0] === current));
-    });
-  };
-
-  options.forEach(([value, label, paths]) => {
-    const button = create('button', '', '');
-    button.type = 'button';
-    button.append(icon(paths, 14), create('span', '', label));
-    button.title = value ? `Always ${label.toLowerCase()}` : 'Follow this device';
-    button.addEventListener('click', () => {
-      setTheme(value);
-      draw();
-    });
-    holder.append(button);
-  });
-
-  draw();
-  sidebar.querySelector('.sidebar-user').before(holder);
-}
-
 function markCurrentPage(sidebar) {
   const here = location.pathname.split('/').pop() || BOARD.home;
   sidebar.querySelectorAll('.menu-item').forEach((item) => {
@@ -786,7 +747,6 @@ function setUpShell() {
 
   markCurrentPage(sidebar);
   markClosedPages(sidebar, user);
-  buildThemeSwitch(sidebar);
   buildRelatedLinks(sidebar);
   buildStateCard(sidebar);
   buildHeaderTools();
@@ -798,4 +758,71 @@ function setUpShell() {
   });
 
   return user;
+}
+
+
+// The one banner a page is allowed. It takes the same items the "Where to start"
+// band builds — count, words, href, tone — so nothing new has to be worked out.
+// The loudest becomes the figure and the sentence; the rest become the line under it.
+function buildBanner(items, options) {
+  const settings = options || {};
+  const live = (items || []).filter((item) => item.count);
+  const holder = create('section', 'banner');
+  holder.setAttribute('aria-label', 'What needs somebody');
+
+  if (!live.length) {
+    holder.classList.add('is-calm');
+    const left = create('div', 'banner-left');
+    const words = create('div');
+    words.append(create('h2', '', settings.calmTitle || 'Nothing is waiting on a manager.'));
+    if (settings.calmNote) words.append(create('p', '', settings.calmNote));
+    left.append(create('span', 'banner-figure', '0'), words);
+    holder.append(left);
+    return holder;
+  }
+
+  const lead = live[0];
+  const rest = live.slice(1);
+
+  const left = create('div', 'banner-left');
+  left.append(create('span', 'banner-figure', formatNumber(lead.count)));
+
+  const words = create('div');
+  const title = create('h2', '', lead.count === 1 ? capitalise(lead.one) : capitalise(lead.many));
+  words.append(title);
+
+  if (rest.length) {
+    const line = create('p');
+    rest.forEach((item, index) => {
+      if (index) line.append(document.createTextNode(' \u00b7 '));
+      line.append(create('b', '', formatNumber(item.count)));
+      line.append(document.createTextNode(' ' + (item.count === 1 ? item.one : item.many)));
+    });
+    words.append(line);
+  }
+  left.append(words);
+  holder.append(left);
+
+  if (lead.href) {
+    const link = create('a', 'banner-link');
+    link.href = lead.href;
+    // a drawn arrow, never a text one
+    link.append(document.createTextNode(settings.action || 'Open it'), icon(['M5 12h13', 'M12.5 6l6 6-6 6'], 14));
+    holder.append(link);
+  }
+  return holder;
+}
+
+const capitalise = (words) => words.charAt(0).toUpperCase() + words.slice(1);
+
+// The live line under the page title: what the board is reading and what needs attention.
+function buildStatusLine(parts) {
+  const line = create('p', 'status-line');
+  (parts || []).forEach((part, index) => {
+    if (index) line.append(document.createTextNode(' \u00b7 '));
+    if (part.bold) line.append(create('b', '', part.text));
+    else if (part.warn) line.append(create('span', 'is-warn', part.text));
+    else line.append(document.createTextNode(part.text));
+  });
+  return line;
 }
