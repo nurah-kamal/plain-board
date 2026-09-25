@@ -102,6 +102,21 @@ See both states on any page:
 
 Tables cap at 200 rows and say what they capped, so a source with fifty thousand rows degrades into a readable page rather than a frozen one.
 
+## Saved views
+
+A selection worth coming back to can be named and kept: the picker at the end of the
+filter bar, and one button that says either **Save this view** or **Remove this view**,
+depending on whether what is on screen is already saved.
+
+Two things it does not do, both said in the page rather than only here:
+
+- **A saved view lives in that browser.** It is not shared, synced or backed up, and
+  clearing site data removes it.
+- **To send somebody a view, send them the page link.** The filters are in the address
+  bar already, which is the part that does travel.
+
+Views belong to the page they were saved on, and the board keeps twelve of them.
+
 ## Things worth knowing
 
 **Every script shares one scope.** There is no module system, so two files declaring the same `const` will silently kill a page. Keep names distinct across `shared/` and `pages/`.

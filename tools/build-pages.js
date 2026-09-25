@@ -107,6 +107,7 @@ ${range}          <label class="sr-only" for="product-filter">Product</label>
           <select class="select" id="person-filter"></select>
           <label class="sr-only" for="row-search">Search the requests</label>
           <input class="search" id="row-search" type="search" placeholder="Search a person, a product or a request" autocomplete="off">
+          <div class="views" id="saved-views"></div>
           <button class="button button-secondary button-inline" id="filters-clear" type="button" hidden>Show everything</button>
         </div>`;
 }
@@ -177,6 +178,7 @@ ${body}
   <script src="../assets/js/shared/app.js"></script>
   <script src="../assets/js/shared/charts.js"></script>
   <script src="../assets/js/shared/filters.js"></script>
+  <script src="../assets/js/shared/views.js"></script>
   <script src="../assets/js/shared/loading.js"></script>
   <script src="../assets/js/pages/${page.script}.js"></script>
 </body>
