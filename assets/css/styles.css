@@ -950,13 +950,21 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
 .tile,
 .status-tile { border: 1px solid var(--line); box-shadow: none; }
 
-/* A label in a board pack is small, spaced and quiet, so the figure beside it carries. */
-.menu-label,
-.tile-badge > span {
+/* A menu group label is small, spaced and quiet. */
+.menu-label {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .09em;
   text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A figure card's label is a muted 13px phrase in sentence case, as on every board in
+   the family: capitals would make each card's name louder than its figure. */
+.tile-badge > span {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
   color: var(--muted);
 }
 .tile-figure b { letter-spacing: -.025em; }

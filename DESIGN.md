@@ -58,7 +58,7 @@ Both are set as `--heading`, `--body` and `--mono` in `:root`, each with a real 
 
 Figures use `font-variant-numeric: tabular-nums` wherever they line up in a column, so a changing number does not shift the ones beside it.
 
-**Labels are small, spaced and quiet.** A tile's name and a menu group heading are set at 11px, 600 weight, uppercase, `letter-spacing: .09em`, in `--muted`. The label recedes so the figure beside it carries the weight — the single cheapest way to make a board read as a considered document rather than a web page.
+**Labels are quiet.** A figure card's name is a 13px, 500 weight phrase in sentence case, in `--muted`, as on every board in the family. Only a menu group heading is set small in capitals (11px, 600 weight, `letter-spacing: .09em`). The label recedes so the figure beside it carries the weight.
 
 The body face matters more here than any colour. An earlier version of this kit used Nunito, a rounded humanist sans, and it undercut everything else on the page.
 
