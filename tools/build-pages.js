@@ -224,7 +224,6 @@ ${filters()}
           <section class="panel span-5" aria-labelledby="channels-title">
             <div class="panel-head">
               <h2 id="channels-title">Where requests come from</h2>
-              <a class="text-link" href="channels.html">Open the channels</a>
             </div>
             <div id="channel-chart"></div>
             <p class="panel-note">Every request in this selection, counted once against the channel it arrived on.</p>
@@ -241,7 +240,6 @@ ${filters()}
           <section class="panel span-5" aria-labelledby="notes-title">
             <div class="panel-head">
               <h2 id="notes-title">What people wrote down</h2>
-              <a class="text-link" href="notes.html">Open the notes</a>
             </div>
             <div id="notes-chart"></div>
             <p class="panel-note">Measured on length alone: whether the next person could pick the request up. Nothing here judges the work.</p>
@@ -250,7 +248,6 @@ ${filters()}
           <section class="panel span-12" aria-labelledby="weeks-title">
             <div class="panel-head">
               <h2 id="weeks-title">The last six weeks</h2>
-              <a class="text-link" href="trends.html">Open the trends</a>
             </div>
             <div class="table-wrap">
               <table class="results" id="weeks-table"></table>

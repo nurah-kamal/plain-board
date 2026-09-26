@@ -85,7 +85,7 @@ A board read on a Monday morning should say each fact in one place. When the sam
 - **Each fact once per page.** A number or a judgement lives in its one best home: the banner, a figure card, a panel or a table. The others do not repeat it.
 - **One banner, with one message.** A page with a headline message gets one navy banner. No figure card repeats the banner's figure, and the banner does not repeat a count that a panel below it already shows.
 - **A figure card is a label, the figure and one muted line.** No chip, no small chart, no footer. If the run behind a figure matters, it gets a table or a panel of its own.
-- **No two controls with the same destination** on one page. A banner button and a panel link that open the same list are one too many.
+- **No two controls with the same destination** on one page. A banner button and a panel link that open the same list are one too many, and a panel does not link to a page the side menu already opens: the menu is always there.
 - **The filter row keeps what people change.** The rest sit behind **More filters**.
 - **"Showing N of M" appears only while something is filtered.** Unfiltered, the page's own figures already say how many it counts.
 - **Page actions go in the header,** beside Refresh (`addHeaderAction()`), never orphaned at the foot of the page. Print is hidden on a phone. An export that saves one table sits in that table's panel head.
