@@ -450,10 +450,30 @@ function exportButton(label, build) {
   return button;
 }
 
+// A movement, said in words for the one line under a figure: "Up 51% on the 4 weeks
+// before". Only the lead ("Up 51%") takes a colour, and only when movement() could call
+// the direction better or worse; volume and "no change" stay the line's own grey.
+function changeWords(change) {
+  if (!change) return null;
+  if (!change.direction) return { tone: 'move', lead: capitalise(change.text), rest: '' };
+  const way = change.direction === 'up' ? 'Up' : 'Down';
+  // Under a base of five movement() gives "2 to 8" rather than a percentage; the figure
+  // already says 8, so the line says where it came from.
+  const small = change.text.match(/^(\S+) to \S+(.*)$/);
+  if (small) return { tone: change.tone, lead: `${way} from ${small[1]}`, rest: small[2] };
+  const [amount, ...rest] = change.text.split(' ');
+  return { tone: change.tone, lead: `${way} ${amount}`, rest: rest.length ? ` ${rest.join(' ')}` : '' };
+}
+
 let tileCount = 0;
+// A figure card: its name, the figure, and one muted line. `note` is the base (what the
+// figure is out of, or what it leaves out); `verdict` is a changeWords() result, and the
+// only part of the card that may carry colour. No chip, no small chart: a card that
+// repeats a panel lower down is saying the same thing twice.
+//
 // `watch` makes a figure watchable: { value, unit, better }. The value is the raw
 // number behind the formatted one, because "4h" cannot be compared with anything.
-function statTile({ label, value, note, change, spark, sparkLabel, sparkMark = 'newest', about, watch }) {
+function statTile({ label, value, note, verdict, about, watch }) {
   const tile = create('div', 'tile');
   const badge = create('div', 'tile-badge');
   const name = create('span', '', label);
@@ -484,13 +504,11 @@ function statTile({ label, value, note, change, spark, sparkLabel, sparkMark = '
 
   const figure = create('div', 'tile-figure');
   figure.append(create('b', '', value));
-  if (spark) figure.append(sparkline(spark, sparkLabel || label, sparkMark));
 
   const foot = create('div', 'tile-foot');
-  if (change) foot.append(statusChip(change));
 
   // The reader's own line, if they drew one and the figure has crossed it. It sits
-  // beside the movement chip and says whose line it is, because a figure the board
+  // above the figure's own line and says whose line it is, because a figure the board
   // flagged and a figure you asked it to watch are different claims.
   if (watch && typeof Lines !== 'undefined') {
     const line = Lines.for(label);
@@ -499,7 +517,16 @@ function statTile({ label, value, note, change, spark, sparkLabel, sparkMark = '
     }
   }
 
-  if (note) foot.append(create('small', '', note));
+  if (note || verdict) {
+    const line = create('p', 'tile-line');
+    if (note) line.append(document.createTextNode(note));
+    if (verdict) {
+      if (note) line.append(document.createTextNode(' · '));
+      line.append(create('span', `tile-verdict is-${verdict.tone}`, verdict.lead));
+      if (verdict.rest) line.append(document.createTextNode(verdict.rest));
+    }
+    foot.append(line);
+  }
 
   tile.append(badge, figure, foot);
 
@@ -515,6 +542,53 @@ function statTile({ label, value, note, change, spark, sparkLabel, sparkMark = '
     tile.append(explain);
   }
   return tile;
+}
+
+// The filters a page reaches for less often, and its saved views, sit behind one button
+// at the end of the filter row. A filter that is set is never hidden: the button opens
+// by itself on arrival when one of them is on, or when the address is a saved view (a
+// shared link, a view picked from the list), and while closed it says how many are on:
+// "More filters · 1". After that it stays however it was left.
+//
+// `countOn` says how many of the hidden filters are set. `button` and `set` are the
+// elements or their ids. Where only saved views would sit behind it, pass
+// `label: 'Saved views'` and the button names what it holds.
+// Returns the function to call whenever the selection changes, so the count keeps up.
+function moreFilters(countOn, options) {
+  const settings = options || {};
+  const find = (item, id) => (typeof item === 'string' || !item ? document.getElementById(item || id) : item);
+  const button = find(settings.button, 'more-filters');
+  const set = find(settings.set, 'more-filter-set');
+  const label = settings.label || 'More filters';
+  if (!button || !set) return () => {};
+
+  let open = null;
+  const show = () => {
+    const on = countOn();
+    if (open === null) open = on > 0 || Boolean(typeof Views !== 'undefined' && Views.matching());
+    set.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+    button.textContent = open ? (label === 'More filters' ? 'Fewer filters' : `Hide ${label.toLowerCase()}`) : on ? `${label} · ${on}` : label;
+  };
+
+  button.addEventListener('click', () => {
+    open = !open;
+    show();
+    if (!open) return;
+    const first = [...set.querySelectorAll('select, input, button')].find((field) => !field.disabled && field.offsetParent);
+    if (first) first.focus();
+  });
+  show();
+  return show;
+}
+
+// A page action (print, an export of the whole page) goes in the header beside Refresh,
+// never at the foot of the page where nobody finds it. `print: true` hides it on a phone.
+function addHeaderAction(button, options) {
+  const tools = document.querySelector('.page-header .header-tools');
+  if (!tools) return;
+  if (options && options.print) button.classList.add('is-print');
+  tools.lastElementChild.before(button);
 }
 
 function statusChip(pace) {

@@ -44,13 +44,13 @@ function showTiles(rows) {
     {
       label: 'Nothing recorded',
       value: formatNumber(all.waiting),
-      note: all.overAWeek ? `${formatNumber(all.overAWeek)} waiting over a week` : 'none waiting over a week',
+      note: all.overAWeek ? `${formatNumber(all.overAWeek)} waiting over a week` : 'None waiting over a week',
       about: 'Requests with no reply written against them. It proves nobody wrote it down, not that nobody replied.'
     },
     {
       label: 'Hours to first reply',
       value: all.middle === null ? '—' : formatHours(all.middle),
-      note: 'the middle value across everyone shown',
+      note: 'Across everyone shown',
       about: 'The middle value, not the average, so one very slow request cannot drag it.'
     }
   ];

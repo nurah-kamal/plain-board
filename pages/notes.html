@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=49517dbb">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=04f492d6">
   <script src="../assets/js/shared/session.js?v=35de28c7"></script>
 </head>
 <body>
@@ -100,7 +100,7 @@
         <div class="page-header">
           <div>
             <h1>Note quality</h1>
-            <p class="page-note">What people wrote against a request, and whether the next person could use it.</p>
+            <p class="page-note">What people wrote down, and whether the next person could use it.</p>
           </div>
         </div>
 
@@ -108,15 +108,18 @@
           <div class="segmented segmented-three" id="range-picker" role="group" aria-label="Period"></div>
           <label class="sr-only" for="product-filter">Product</label>
           <select class="select" id="product-filter"></select>
-          <label class="sr-only" for="person-filter">Person</label>
-          <select class="select" id="person-filter"></select>
           <label class="sr-only" for="row-search">Search the requests</label>
           <input class="search" id="row-search" type="search" placeholder="Search a person, a product or a request" autocomplete="off">
-          <div class="views" id="saved-views"></div>
+          <button class="button button-secondary button-inline more-filters" id="more-filters" type="button" aria-expanded="false" aria-controls="more-filter-set">More filters</button>
+          <div class="more-filter-set" id="more-filter-set" hidden>
+            <label class="sr-only" for="person-filter">Person</label>
+            <select class="select" id="person-filter"></select>
+            <div class="views" id="saved-views"></div>
+          </div>
           <button class="button button-secondary button-inline" id="filters-clear" type="button" hidden>Show everything</button>
         </div>
 
-        <p class="panel-note" id="filter-note"></p>
+        <p class="panel-note" id="filter-note" hidden></p>
 
         <section class="open-section" aria-labelledby="grade-grid-title">
           <h2 class="sr-only" id="grade-grid-title">Choose how much the note says</h2>
@@ -139,14 +142,14 @@
   <div class="toast" id="toast" role="status" hidden></div>
 
   <script src="../assets/js/shared/source.js?v=52770cfb"></script>
-  <script src="../assets/js/shared/data.js?v=f5ecff6f"></script>
+  <script src="../assets/js/shared/data.js?v=f058c053"></script>
   <script src="../assets/js/shared/board.js?v=e7cf028a"></script>
-  <script src="../assets/js/shared/app.js?v=aa993f49"></script>
-  <script src="../assets/js/shared/lines.js?v=1865effe"></script>
-  <script src="../assets/js/shared/charts.js?v=dde69a4e"></script>
-  <script src="../assets/js/shared/filters.js?v=d339fa9a"></script>
-  <script src="../assets/js/shared/views.js?v=2fb3dd97"></script>
+  <script src="../assets/js/shared/app.js?v=2459acf5"></script>
+  <script src="../assets/js/shared/lines.js?v=0f9d11f8"></script>
+  <script src="../assets/js/shared/charts.js?v=91fd9854"></script>
+  <script src="../assets/js/shared/filters.js?v=d167a295"></script>
+  <script src="../assets/js/shared/views.js?v=3244a64a"></script>
   <script src="../assets/js/shared/loading.js?v=03bcb8d6"></script>
-  <script src="../assets/js/pages/notes.js?v=db9820f0"></script>
+  <script src="../assets/js/pages/notes.js?v=4cb99d76"></script>
 </body>
 </html>

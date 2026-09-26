@@ -80,47 +80,38 @@ fill('chart-list', [
       { label: '8 to 14', value: 3 },
       { label: '15+', value: 6, note: 'oldest' }
     ]),
-    "columnChart(rows, { groups: [] })\n// rows: [{ label, value, group?, note? }]"),
-
-  demo('Sparkline', 'The run behind a figure, small enough to sit inside its tile.',
-    (() => {
-      const holder = create('div', 'demo-inline');
-      holder.append(sparkline([12, 15, 11, 18, 16, 22], 'Six weeks'));
-      return holder;
-    })(),
-    "sparkline([12, 15, 11, 18, 16, 22], 'Six weeks')\n// third argument: 'newest' (default) or 'highest'")
+    "columnChart(rows, { groups: [] })\n// rows: [{ label, value, group?, note? }]")
 ]);
 
 // ---------- figures ----------
 
 fill('tile-list', [
-  demo('Figure tile', 'A number, what it is, the run behind it, and an (i) saying what it does not prove. Every tile on every page carries one — tools/check-tiles.js will not let the pages build otherwise.',
+  demo('Figure tile', 'A name, the figure, and one muted line: its base, and how it moved. The movement takes a colour only where the board can call a direction better or worse. No chip and no small chart: if the run behind a figure matters, it gets a table or a panel of its own. Every tile carries an (i) saying what it does not prove, and tools/check-tiles.js will not let the pages build otherwise.',
     (() => {
       const holder = create('div', 'tiles');
       holder.append(
         statTile({
           label: 'Requests',
-          value: '129', note: '6 people · 3 channels',
-          change: { direction: 'up', tone: 'well', text: '18% on the previous 4 weeks' },
-          spark: [12, 15, 11, 18, 16, 22], sparkLabel: 'Six weeks',
+          value: '129',
+          verdict: changeWords(movement(129, 109, { good: null, suffix: ' on the 4 weeks before' })),
           about: 'One row per request, counted once. It is what the board holds, not what was sent.'
         }),
         statTile({
-          label: 'Nothing recorded',
-          value: '23', note: 'longest has waited 72 days',
-          change: { direction: 'down', tone: 'well', text: '9% on the previous 4 weeks' },
-          spark: [14, 11, 16, 12, 10, 8], sparkLabel: 'Six weeks',
-          about: 'Requests with no reply written against them. It does not prove nobody replied — only that nobody wrote it down.'
+          label: 'Answered within a day',
+          value: '82%', note: '41 of 50 replies',
+          verdict: changeWords(movement(82, 74, { good: 'up', suffix: ' on the 4 weeks before' })),
+          about: 'Counted only on requests with a recorded reply. A request nobody wrote anything against cannot be measured.'
         }),
         statTile({
-          label: 'Hours to first reply',
-          value: '4h', note: 'the middle value, not the average',
-          about: 'The middle value, so one very old request cannot drag it. Only requests carrying a recorded reply can be measured at all.'
+          label: 'Nothing recorded',
+          value: '23', note: 'Longest 72 days',
+          verdict: changeWords(movement(23, 19, { good: 'down', suffix: ' on the 4 weeks before' })),
+          about: 'Requests with no reply written against them. It does not prove nobody replied, only that nobody wrote it down.'
         })
       );
       return holder;
     })(),
-    "statTile({\n  label, value, note,\n  change,                     // a statusChip shape\n  spark, sparkLabel, sparkMark,\n  about,                      // shows the (i). Required: the build checks for it\n  watch                       // { value, unit, better } — lets a reader draw a line\n})"),
+    "statTile({\n  label, value,\n  note,                       // the base: what the figure is out of\n  verdict,                    // changeWords(movement(now, before, { good, suffix }))\n  about,                      // shows the (i). Required: the build checks for it\n  watch                       // { value, unit, better }: lets a reader draw a line\n})"),
 
   demo('Status chip', 'A state, in words as well as colour, so the colour is never the only carrier.',
     (() => {
@@ -141,7 +132,7 @@ fill('tile-list', [
     })(),
     "statusChip({ tone, text, direction })\n// tone: good | waiting | changed | well | poor | info\n// direction: 'up' | 'down' adds an arrow and a screen-reader word"),
 
-  demo('The banner', 'One to a page, at the top of the landing page. The loudest thing becomes the figure and the sentence; whatever else is waiting becomes the line under it. Every count is true right now and the link goes to the group it names.',
+  demo('The banner', 'One to a page, at the top of the landing page, with one message. The loudest thing becomes the figure and the sentence. A line under it is only for something waiting that has no home lower on the page, and no figure card repeats the banner\'s figure. Every count is true right now and the link goes to the list it counts.',
     (() => {
       const holder = create('div', 'demo-stack');
       const live = buildBanner([
@@ -195,10 +186,32 @@ fill('control-list', [
       primary.type = 'button';
       const secondary = create('button', 'button button-secondary button-inline', 'Show everything');
       secondary.type = 'button';
-      holder.append(primary, secondary, exportButton('Export these rows', () => showToast('This is the demo page — nothing was exported.')));
+      holder.append(primary, secondary, exportButton('Export these rows', () => showToast('This is the demo page, so nothing was exported.')));
       return holder;
     })(),
-    "exportButton('Export these rows', () => downloadRows(name, headings, rows))"),
+    "exportButton('Export these rows', () => downloadRows(name, headings, rows))\n\n// An action for the whole page goes in the header, beside Refresh:\naddHeaderAction(button)\naddHeaderAction(button, { print: true })  // a print button: hidden on a phone"),
+
+  demo('More filters', 'The filters a page reaches for less often, and its saved views, behind one button at the end of the filter row. It opens by itself when one of them is set, counts them while closed, and fades in over 150ms.',
+    (() => {
+      const holder = create('div', 'controls');
+      const select = create('select', 'select');
+      select.setAttribute('aria-label', 'Product');
+      select.append(new Option('All products', 'All'), new Option('Delivery', 'd'));
+      const button = create('button', 'button button-secondary button-inline more-filters', 'More filters');
+      button.type = 'button';
+      const set = create('div', 'more-filter-set');
+      set.id = 'demo-more-set';
+      button.setAttribute('aria-controls', set.id);
+      const person = create('select', 'select');
+      person.setAttribute('aria-label', 'Person');
+      person.append(new Option('Everyone', 'All'), new Option('Ada Nkemelu', 'Ada'));
+      set.append(person);
+      holder.append(select, button, set);
+      const show = moreFilters(() => (person.value === 'All' ? 0 : 1), { button, set });
+      person.addEventListener('change', show);
+      return holder;
+    })(),
+    "moreFilters(countOn, { button, set, label })\n// countOn: () => how many of the hidden filters are set\n// label: 'Saved views' when only saved views sit behind it\n// returns show(): call it when the selection changes"),
 
   demo('Fields', 'A search and a select, at the size a finger can hit.',
     (() => {
@@ -292,7 +305,7 @@ fill('state-list', [
     "create('p', 'empty', 'Nothing in this band matches the filters above.')"),
 
   demo('Nothing to compare against', 'The longest period reaches the start of the data, so the board says so rather than comparing against a shorter, unfair stretch.',
-    create('p', 'empty', 'No earlier 12 weeks to compare with — the board starts here.'),
+    create('p', 'empty', 'No earlier 12 weeks to compare with. The board starts here.'),
     "hasPrevious(filterState.range)  // false on the longest range"),
 
   demo('A change too small to be a percentage', 'Two requests becoming eight is not a 300% improvement, it is six requests.',

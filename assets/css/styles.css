@@ -48,6 +48,24 @@
   --current-ink: #1B3A63;
   --current-line: #A9C2DE;
   --shell: 0 1px 2px rgba(15, 23, 42, .05);
+  --shadow-hover: 0 2px 8px rgba(15, 23, 42, .06); /* A drill-down tile under the pointer. */
+  --line-strong: #D5D9E0; /* A hairline that has to hold its own: a hovered tile, an open More filters. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* The one curve for anything that appears. */
+  /* State colour: green for go, yellow for hold, red for stop, and nothing else. Soft is
+     the fill, ink the words on it, bar a mark. Each ink clears 4.5:1 on its own soft
+     fill and on white. */
+  --green-soft: #E8F6EE;
+  --green-line: #BFE3CE;
+  --green-ink: #15803D;
+  --green-bar: #22A55A;
+  --yellow-soft: #FEF4E2;
+  --yellow-line: #F3DDB4;
+  --yellow-ink: #A64B07;
+  --yellow-bar: #F0A020;
+  --red-soft: #FDECEC;
+  --red-line: #F6C9C9;
+  --red-ink: #C81E1E;
+  --red-bar: #E5484D;
   --ring-accent: #2F6FEB;
   --ring-good: #22A55A;
   --ring-warn: #F0A020;
@@ -603,14 +621,11 @@ a.menu-item:hover { background: var(--field); color: var(--ink); }
 .about summary::after { content: ""; flex: none; width: 18px; height: 18px; margin-left: auto; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform .15s ease; }
 .about[open] summary::after { transform: rotate(180deg); }
 
-/* Staff incentives on Home */
 
 /* Team page */
 .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .tile { display: flex; flex-direction: column; gap: 0; padding: 18px; border-radius: var(--radius); background: var(--card); box-shadow: var(--shell); }
-.tile > span { display: block; font-size: 14px; font-weight: 700; color: var(--muted); }
 .tile-figure b { display: block; margin-top: 2px; font-family: var(--heading); font-weight: 600; line-height: 1.15; font-variant-numeric: tabular-nums; }
-.tile small { display: block; margin-top: 2px; font-size: 14px; color: var(--muted); }
 
 .search {
   min-height: 44px;
@@ -1012,19 +1027,6 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
   .header-tools { width: 100%; justify-content: space-between; }
 }
 
-/* Three status colours for the Decide first cards */
-:root {
-  --red-soft: #FDECEC;
-  --red-line: #F6C9C9;
-  --red-ink: #C81E1E;
-  --yellow-soft: #FEF4E2;
-  --yellow-line: #F3DDB4;
-  --yellow-ink: #A64B07;
-  --green-soft: #E8F6EE;
-  --green-line: #BFE3CE;
-  --green-ink: #15803D;
-}
-
 /* Decide first: one group per status, and the card itself carries the colour */
 /* Decide first: one tile per group, opened to read the cards inside */
 [data-flag="blocked"] { --flag-soft: var(--red-soft); --flag-line: var(--red-line); --flag-ink: var(--red-ink); }
@@ -1058,6 +1060,9 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
   transition: border-color .15s ease, background-color .15s ease;
 }
 .status-tile small { font-size: 14px; line-height: 1.45; color: var(--muted); }
+/* The count on a drill-down tile reads as a figure, with its unit beside it. */
+.status-top { display: flex; align-items: baseline; gap: 6px; color: var(--muted); }
+.status-top b { font-size: 26px; font-weight: 650; letter-spacing: -.03em; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums; }
 
 /* A section that owns the page rather than sitting in a panel */
 .open-section { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
@@ -1073,8 +1078,6 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
 .tile-badge { display: flex; align-items: flex-start; min-height: 42px; margin-bottom: 8px; }
 .tile-badge > span { font-size: 14px; font-weight: 700; line-height: 1.35; color: var(--muted); }
 .tile-figure b { font-size: 30px; }
-.tile-foot { align-items: center; flex-wrap: wrap; }
-.tile-foot small { margin-top: 0; }
 
 /* Rings: one rate each, with the figure inside and what it counts underneath */
 .ring-row { display: flex; flex-direction: column; gap: 16px; margin: 0; }
@@ -1274,12 +1277,9 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.5; }
   .search-results { width: 100%; }
 }
 
-/* A figure, the run behind it, and an explanation you can open */
-.tile-figure { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; min-height: 38px; }
+/* A figure, and an explanation you can open */
+.tile-figure { display: flex; align-items: flex-end; min-height: 38px; }
 .tile-figure b { margin: 0; }
-.spark { display: flex; align-items: flex-end; gap: 3px; flex: none; width: 74px; height: 38px; }
-.spark span { flex: 1; min-width: 0; border-radius: 2px 2px 0 0; background: var(--accent-soft); }
-.spark span.is-marked { background: var(--accent); }
 .tile-badge > span { display: inline-flex; align-items: center; gap: 6px; }
 .tile-about-open {
   display: inline-grid;
@@ -1364,7 +1364,7 @@ tbody tr:has(.cell-pick input:checked) { background: var(--accent-soft); }
 .card { border: 1px solid var(--line); box-shadow: var(--shell); }
 .panel:hover,
 .tile:hover { border-color: var(--line); }
-.status-tile:hover { border-color: var(--line-strong, #D5D9E0); background: var(--subtle); box-shadow: var(--shadow-hover, 0 2px 8px rgba(15, 23, 42, .06)); }
+.status-tile:hover { border-color: var(--line-strong); background: var(--subtle); box-shadow: var(--shadow-hover); }
 
 /* The sidebar is white against the grey canvas, edged not shadowed. */
 .sidebar { background: var(--card); border-right: 1px solid var(--line); box-shadow: none; }
@@ -1508,18 +1508,14 @@ h1 { letter-spacing: -.02em; font-weight: 650; }
 .banner-link:hover { background: var(--subtle); }
 .banner-link svg { width: 14px; height: 14px; }
 
-/* A figure card closes with its base on the left and what is late on the right. */
-.tile-foot {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid var(--line-soft);
-  font-size: 12px;
-  color: var(--muted);
-}
-.tile-foot b { font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+/* A figure card closes with one muted line: its base and, where the board can call a
+   direction better or worse, a short coloured verdict. Never a chip, never a chart. */
+.tile-foot { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: auto; padding-top: 10px; }
+.tile-line { font-size: 13px; line-height: 1.45; color: var(--muted); }
+.tile-verdict.is-well,
+.tile-verdict.is-poor { font-weight: 600; }
+.tile-verdict.is-well { color: var(--green-ink); }
+.tile-verdict.is-poor { color: var(--red-ink); }
 
 @media (max-width: 900px) {
   .banner { flex-direction: column; align-items: flex-start; }
@@ -1596,3 +1592,23 @@ h1 { letter-spacing: -.02em; font-weight: 650; }
 
   @page { margin: 14mm; }
 }
+
+/* More filters: the filters a page uses less often, and its saved views, opened from one
+   button at the end of the filter row. It is opened a few times a day, so the controls
+   fade in (150ms, the board's ease-out) rather than popping, and do not slide: the row
+   reflows around them either way. */
+.more-filter-set:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; transition: opacity 150ms var(--ease-out); }
+@starting-style { .more-filter-set:not([hidden]) { opacity: 0; } }
+.more-filters { white-space: nowrap; }
+.more-filters[aria-expanded="true"] { background: var(--subtle); border-color: var(--line-strong); }
+@media (max-width: 560px) {
+  .controls .more-filters { grid-column: 1 / -1; }
+  .more-filter-set:not([hidden]) { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .more-filter-set .select { width: 100%; max-width: none; }
+  .more-filter-set .view-naming { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { .more-filter-set:not([hidden]) { transition: none; } }
+
+/* A page action (print, export of the whole page) sits in the header beside Refresh.
+   Print is for a laptop; on a phone it would only take a row. */
+@media (max-width: 700px) { .header-tools .is-print { display: none; } }

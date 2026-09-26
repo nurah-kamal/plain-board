@@ -1,6 +1,9 @@
 setUpShell();
 
-// What needs somebody today, before any of the figures below.
+// What needs somebody today, before any of the figures below. One message: the requests
+// that have sat over a week with nothing recorded. How many arrived today, and how many
+// replies were one word, are said once in the panels below (the waiting chart and What
+// people wrote down), so the banner does not say them again.
 function showStart(rows) {
   const waiting = unanswered(rows);
   const items = [
@@ -9,32 +12,22 @@ function showStart(rows) {
       one: 'request has waited over a week with nothing recorded',
       many: 'requests have waited over a week with nothing recorded',
       tone: 'is-stop',
-      href: 'requests.html#8-14'
-    },
-    {
-      count: rows.filter((request) => request.reply !== null && noteGrade(request.note) === 'one-word').length,
-      one: 'reply was recorded in a single word',
-      many: 'replies were recorded in a single word',
-      tone: 'is-hold',
-      href: 'team.html'
-    },
-    {
-      count: waiting.filter((request) => request.days < 1).length,
-      one: 'request arrived today and has had no reply yet',
-      many: 'requests arrived today and have had no reply yet',
-      tone: 'is-hold',
-      href: 'requests.html#same-day'
+      // Over a week is two bands, so the link opens the waiting list rather than one of them.
+      href: 'requests.html'
     }
   ].filter((item) => item.count);
 
   const holder = document.getElementById('start-here');
   holder.replaceChildren(buildBanner(items, {
     action: 'Open the waiting list',
-    calmTitle: 'Nothing in this selection is waiting on anybody.',
-    calmNote: 'Every request here has a reply recorded against it.'
+    calmTitle: 'Nothing in this selection has waited over a week.',
+    calmNote: 'Everything older than a week has a reply recorded against it.'
   }));
 }
 
+// Four figures, each a label, the figure and one line: its base and, against the same
+// length of time just before, how it moved. The runs behind them are in The last six
+// weeks, lower down, rather than drawn small inside each card.
 function showTiles(rows) {
   const answered = replied(rows);
   const waiting = unanswered(rows);
@@ -43,13 +36,14 @@ function showTiles(rows) {
 
   // The same selection, one period earlier. On the longest period the board reaches
   // the start of its own data, so there is nothing honest to compare against and the
-  // tiles simply go without a chip.
+  // line says so instead of moving.
   const comparable = hasPrevious(filterState.range);
   const before = comparable ? previousRows() : [];
   const beforeAnswered = replied(before);
   const beforeSameDay = answeredWithinADay(before).length;
   const beforeMiddle = median(beforeAnswered.map((request) => request.reply));
-  const since = ` on the previous ${rangeLabel().toLowerCase()}`;
+  const since = ` on the ${rangeLabel().toLowerCase()} before`;
+  const nothingBefore = `Nothing earlier to compare with`;
 
   // A share has to be compared as a share, not as a count of the rows behind it.
   const shareNow = answered.length ? Math.round((sameDay / answered.length) * 100) : null;
@@ -61,51 +55,79 @@ function showTiles(rows) {
       value: formatNumber(rows.length),
       // No better direction: the reader picks the side they care about.
       watch: { value: rows.length, unit: 'requests', better: null },
-      // More requests arriving is not better or worse, it is busier, so the chip
-      // states the move and stops there.
-      change: comparable ? movement(rows.length, before.length, { good: null, suffix: since }) : null,
-      note: `${plural(new Set(rows.map((request) => request.person)).size, 'person', 'people')} · ${plural(new Set(rows.map((request) => request.channel)).size, 'channel', 'channels')}`,
-      spark: TRENDS.opened,
-      sparkLabel: 'Requests opened in each of the last six weeks',
-      about: 'One row per request, counted once. It is what the board holds, not what was sent — nothing here checks that every request arrived. The change compares this period with the same length of time immediately before it.'
+      // More requests arriving is not better or worse, it is busier, so the line states
+      // the move in grey and stops there.
+      note: comparable ? '' : nothingBefore,
+      verdict: comparable ? changeWords(movement(rows.length, before.length, { good: null, suffix: since })) : null,
+      about: 'One row per request, counted once. It is what the board holds, not what was sent: nothing here checks that every request arrived. The movement compares this period with the same length of time immediately before it.'
     },
     {
       label: 'Answered within a day',
       value: shareNow === null ? '—' : `${shareNow}%`,
       watch: { value: shareNow, unit: 'per cent', better: 'above' },
-      change: comparable && shareNow !== null && shareBefore !== null
-        ? movement(shareNow, shareBefore, { good: 'up', suffix: since })
+      note: answered.length ? `${formatNumber(sameDay)} of ${formatNumber(answered.length)} replies` : 'Nothing recorded to measure',
+      verdict: comparable && shareNow !== null && shareBefore !== null
+        ? changeWords(movement(shareNow, shareBefore, { good: 'up', suffix: since }))
         : null,
-      note: answered.length ? `${formatNumber(sameDay)} of ${formatNumber(answered.length)} with a reply recorded` : 'nothing recorded to measure',
-      spark: TRENDS.answeredSameDay,
-      sparkLabel: 'Share answered within a day, over the last six weeks',
       about: 'Counted only on requests that have a recorded reply. A request nobody wrote anything against cannot be measured at all, so it is left out rather than counted as slow.'
     },
     {
       label: 'Nothing recorded',
       value: formatNumber(waiting.length),
       watch: { value: waiting.length, unit: 'requests', better: 'below' },
-      change: comparable ? movement(waiting.length, unanswered(before).length, { good: 'down', suffix: since }) : null,
-      note: waiting.length ? `longest has waited ${waitingWords(Math.max(...waiting.map((request) => request.days))).toLowerCase()}` : 'everything has a reply recorded',
-      spark: TRENDS.waiting,
-      sparkLabel: 'Requests with nothing recorded, over the last six weeks',
-      about: 'Requests with no reply written against them. It does not prove nobody replied — only that nobody wrote it down. A recent period always looks worse, because there has been less time for anybody to write anything.'
+      note: waiting.length ? `Longest ${waitingWords(Math.max(...waiting.map((request) => request.days))).toLowerCase()}` : 'Everything has a reply recorded',
+      verdict: comparable ? changeWords(movement(waiting.length, unanswered(before).length, { good: 'down', suffix: since })) : null,
+      about: 'Requests with no reply written against them. It does not prove nobody replied, only that nobody wrote it down. A recent period always looks worse, because there has been less time for anybody to write anything.'
     },
     {
       label: 'Hours to first reply',
       value: middle === null ? '—' : formatHours(middle),
       watch: { value: middle, unit: 'hours', better: 'below' },
-      change: comparable && middle !== null && beforeMiddle !== null
-        ? movement(middle, beforeMiddle, { good: 'down', suffix: since })
+      note: comparable && middle !== null && beforeMiddle !== null ? '' : nothingBefore,
+      verdict: comparable && middle !== null && beforeMiddle !== null
+        ? changeWords(movement(middle, beforeMiddle, { good: 'down', suffix: since }))
         : null,
-      note: 'the middle value, not the average',
-      spark: TRENDS.hoursToReply,
-      sparkLabel: 'Middle hours to a first reply, over the last six weeks',
-      about: 'The middle value, so one very old request cannot drag it. Only requests carrying a recorded reply can be measured.'
+      about: 'The middle value, not the average, so one very old request cannot drag it. Only requests carrying a recorded reply can be measured.'
     }
   ];
 
   document.getElementById('tiles').replaceChildren(...tiles.map(statTile));
+}
+
+// The six weeks the figure cards used to draw as small charts, as a table that names
+// its weeks and its values. Every request, whatever the filters: it is the run the
+// period above sits in.
+function showWeeks() {
+  const table = document.getElementById('weeks-table');
+  table.replaceChildren();
+
+  const head = create('thead');
+  const headRow = create('tr');
+  ['Week', 'Requests', 'Answered within a day', 'Nothing recorded', 'Hours to first reply'].forEach((label, index) => {
+    const cell = create('th', index ? 'cell-number' : '', label);
+    cell.scope = 'col';
+    headRow.append(cell);
+  });
+  head.append(headRow);
+
+  const body = create('tbody');
+  WEEKS.slice(-6).reverse().forEach((week) => {
+    const line = create('tr');
+    const first = create('th', 'cell-name');
+    first.scope = 'row';
+    first.append(create('b', '', week.label));
+    line.append(
+      first,
+      numberCell(formatNumber(week.opened), week.opened),
+      numberCell(week.sameDay === null ? '—' : formatPercent(week.sameDay), week.sameDay === null ? -1 : week.sameDay),
+      numberCell(formatNumber(week.waiting), week.waiting),
+      numberCell(week.hoursToReply === null ? '—' : formatHours(week.hoursToReply), week.hoursToReply === null ? -1 : week.hoursToReply)
+    );
+    body.append(line);
+  });
+
+  table.append(head, body);
+  labelCells(table);
 }
 
 function showWaiting(rows) {
@@ -167,6 +189,7 @@ function render() {
   showChannels(rows);
   showArrivals();
   showNotes(rows);
+  showWeeks();
 }
 
 setUpFilters(render);

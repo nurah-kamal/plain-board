@@ -1,30 +1,11 @@
 setUpShell();
 
+// No figure cards on this page: a card per channel said its count, its change and its
+// time to reply, which the table under the charts already says, row by row.
 const countsByChannel = (rows) => CHANNELS.map((channel) => ({
   channel,
   rows: rows.filter((request) => request.channel === channel)
 }));
-
-function showTiles(rows, before, comparable) {
-  const tiles = countsByChannel(rows).map(({ channel, rows: own }, index) => {
-    const answered = replied(own);
-    const middle = median(answered.map((request) => request.reply));
-    const earlier = before.filter((request) => request.channel === channel).length;
-
-    return {
-      label: channel,
-      tone: index === 0 ? 'is-info' : index === 1 ? 'is-good' : 'is-warn',
-      value: formatNumber(own.length),
-      change: comparable ? movement(own.length, earlier) : null,
-      note: middle === null ? 'no reply recorded yet' : `${formatHours(middle)} to a first reply`,
-      spark: WEEKS.slice(-6).map((week) => week.opened),
-      sparkLabel: `Requests opened in each of the last six weeks, all channels`,
-      about: `Every request that arrived on ${channel.toLowerCase()}, counted once. The change compares this period with the same length of time immediately before it.`
-    };
-  });
-
-  document.getElementById('tiles').replaceChildren(...tiles.map(statTile));
-}
 
 // The one chart that needs two periods side by side.
 function showComparison(rows, before, comparable) {
@@ -129,7 +110,6 @@ function render() {
   const comparable = hasPrevious(filterState.range);
 
   showFilterNote('filter-note', rows);
-  showTiles(rows, before, comparable);
   showComparison(rows, before, comparable);
   showShare(rows);
   showTable(rows, before, comparable);

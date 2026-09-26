@@ -71,19 +71,19 @@ function showTiles(all) {
     {
       label: 'Waiting on a decision',
       value: formatNumber(all.length),
-      note: all.length === 1 ? 'one group' : `${formatNumber(all.length)} groups`,
+      note: 'Of the four kinds this page looks for',
       about: 'A group appears only when there is something in it. An empty board here means nothing needs a manager today, not that nothing is happening.'
     },
     {
       label: 'Requests involved',
       value: formatNumber(new Set(all.flatMap((group) => group.rows.map((request) => request.id))).size),
-      note: 'counted once, even where two groups name the same request',
+      note: 'Each counted once',
       about: 'A request can sit in more than one group. This counts it once, so the figure cannot be inflated by adding groups.'
     },
     {
       label: 'Open right now',
       value: formatNumber(open.length),
-      note: open.length ? `oldest waiting ${waitingWords(Math.max(...open.map((request) => request.days))).toLowerCase()}` : 'nothing open',
+      note: open.length ? `Oldest waiting ${waitingWords(Math.max(...open.map((request) => request.days))).toLowerCase()}` : 'Nothing open',
       about: 'Every request with nothing recorded against it, regardless of age. This page does not filter by period, because a decision does not expire.'
     }
   ];
@@ -119,8 +119,8 @@ function showGroups(all) {
 
 function render() {
   const all = groups();
-  document.getElementById('decisions-note').textContent =
-    `Everything open, whenever it arrived · read ${SNAPSHOT.readShort}. This page does not narrow by period, because a decision does not expire.`;
+  // Why there is no period picker is said once, in the (i) on Open right now.
+  document.getElementById('decisions-note').textContent = `Everything open, whenever it arrived · read ${SNAPSHOT.readShort}`;
   showTiles(all);
   showGroups(all);
 }

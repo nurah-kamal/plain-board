@@ -1,5 +1,8 @@
-// Three pages narrow the same rows the same way, so the filter bar lives here rather
-// than three times over. A page gets whichever of the four controls its markup contains.
+// Five pages narrow the same rows the same way, so the filter bar lives here rather
+// than five times over. A page gets whichever of the four controls its markup contains.
+//
+// The period, the product and the search stay on the row: they are what gets changed.
+// The person and the saved views sit behind More filters (moreFilters() in app.js).
 //
 // Someone who is not a manager only ever sees their own rows: the person filter is set
 // for them and locked, so the page cannot quietly show them somebody else's work.
@@ -34,7 +37,7 @@ function previousRows() {
 }
 
 // What to say wherever a comparison cannot be drawn.
-const noComparison = () => `No earlier ${rangeLabel().toLowerCase()} to compare with — the board starts here.`;
+const noComparison = () => `No earlier ${rangeLabel().toLowerCase()} to compare with. The board starts here.`;
 
 function activeFilters() {
   return [
@@ -44,18 +47,26 @@ function activeFilters() {
   ].filter(Boolean);
 }
 
-// One line under the filters saying how much is on screen. It does not repeat the
-// period: the chip above it is already showing which one is selected.
-function showFilterNote(id, rows) {
-  const holder = document.getElementById(id);
-  if (!holder) return;
-  const active = activeFilters();
-  holder.textContent = active.length
-    ? `${plural(rows.length, 'request', 'requests')} · filtered by ${active.join(' and ')}`
-    : plural(rows.length, 'request', 'requests');
+// Set once the filter row is wired, so the More filters count keeps up with the row.
+let showMoreFilters = () => {};
 
+// One line under the filters, and only while something is filtered: "Showing 12 of 59
+// requests · Billing". With nothing filtered the page's own figures already say how many
+// it counts, so the line would only say it again. It does not name the period: the
+// picker above it is already showing which one is chosen.
+function showFilterNote(id, rows) {
+  showMoreFilters();
+  const active = activeFilters();
   const clear = document.getElementById('filters-clear');
   if (clear) clear.hidden = !active.length && filterState.range === 'month';
+
+  const holder = document.getElementById(id);
+  if (!holder) return;
+  holder.hidden = !active.length;
+  const all = matching(filterState.range, 'All', viewer.person || 'All').length;
+  holder.textContent = active.length
+    ? `Showing ${formatNumber(rows.length)} of ${plural(all, 'request', 'requests')} · ${active.join(' and ')}`
+    : '';
 }
 
 function clearFilters(redraw) {
@@ -133,6 +144,9 @@ function setUpFilters(redraw) {
 
   const clear = document.getElementById('filters-clear');
   if (clear) clear.addEventListener('click', () => clearFilters(redraw));
+
+  // Only a person someone chose counts: a team member's own name is set for them.
+  showMoreFilters = moreFilters(() => (filterState.person !== 'All' && !viewer.person ? 1 : 0));
 }
 
 // The words a request's state gets, wherever it is shown.

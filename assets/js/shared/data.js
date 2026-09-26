@@ -343,11 +343,3 @@ const WEEKS = Array.from({ length: 12 }, (unused, index) => {
     fullNotes: answered.filter((request) => noteGrade(request.note) === 'full').length
   };
 });
-
-// The run behind a figure, for the sparkline inside its tile. Last six weeks.
-const TRENDS = {
-  opened: WEEKS.slice(-6).map((week) => week.opened),
-  answeredSameDay: WEEKS.slice(-6).map((week) => Math.round((week.sameDay || 0) * 100)),
-  waiting: WEEKS.slice(-6).map((week) => week.waiting),
-  hoursToReply: WEEKS.slice(-6).map((week) => week.hoursToReply || 0)
-};

@@ -96,11 +96,10 @@ function showGrade() {
   const note = document.getElementById('grade-panel').querySelector('.panel-note');
   note.textContent = rows.length > SHOWN
     ? `Showing the ${formatNumber(SHOWN)} most recent of ${plural(rows.length, 'note', 'notes')}. Graded on length alone, because length is the only thing the text can honestly be read for.`
-    : 'Graded on length alone, because length is the only thing the text can honestly be read for. A short note is not bad work — it is a note the next person cannot use.';
+    : 'Graded on length alone, because length is the only thing the text can honestly be read for. A short note is not bad work: it is a note the next person cannot use.';
 }
 
 function render() {
-  const graded = gradedRows();
   showFilterNote('filter-note', currentRows());
 
   document.getElementById('grade-panel').hidden = !state.grade;
@@ -110,13 +109,9 @@ function render() {
     showGrade();
     return;
   }
+  // Each grade's count is on its own tile, so the line under the filters does not add
+  // them up again.
   showGrades();
-
-  const note = document.getElementById('filter-note');
-  if (graded.length) {
-    const thin = graded.filter((request) => ['thin', 'one-word', 'none'].includes(noteGrade(request.note))).length;
-    note.textContent += ` · ${plural(thin, 'note', 'notes')} the next person could not pick up`;
-  }
 }
 
 function readUrl(moveFocus) {

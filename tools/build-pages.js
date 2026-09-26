@@ -51,22 +51,22 @@ const PAGES = [
     title: 'Waiting for a reply', note: 'Requests with nothing recorded against them, longest wait first.',
     description: 'Requests with nothing recorded against them yet.' },
   { file: 'notes.html', script: 'notes', name: 'Note quality', icon: 'notes', group: 'Requests',
-    title: 'Note quality', note: 'What people wrote against a request, and whether the next person could use it.',
+    title: 'Note quality', note: 'What people wrote down, and whether the next person could use it.',
     description: 'The replies people recorded against requests.' },
   { file: 'channels.html', script: 'channels', name: 'Channels', icon: 'channels', group: 'Requests',
-    title: 'Channels', note: 'Where requests arrive, and how each channel compares with the period before.',
+    title: 'Channels', note: 'Where requests arrive, against the period before.',
     description: 'Where support requests arrive and how each channel is doing.' },
 
   { file: 'team.html', script: 'team', name: 'By person', icon: 'team', group: 'Team',
-    title: 'By person', note: 'How many requests each person was given, and what came back on them.',
+    title: 'By person', note: 'What each person was given, and what came back on it.',
     description: 'Requests and recorded replies for each person.' },
   { file: 'workload.html', script: 'workload', name: 'Workload', icon: 'workload', group: 'Team',
-    title: 'Workload', note: 'What is open against each person right now, for balancing rather than judging.',
+    title: 'Workload', note: 'What is open against each person now, for balancing, not judging.',
     description: 'What is open against each person right now.' },
 
   { file: 'decisions.html', script: 'decisions', name: 'Needs a decision', icon: 'decisions', group: 'Decisions',
     access: 'manager',
-    title: 'Needs a decision', note: 'What is waiting on a manager, grouped by what has to happen next.',
+    title: 'Needs a decision', note: 'What is waiting on a manager, by what has to happen next.',
     description: 'Requests waiting on a decision from a manager.' },
 
   { file: 'trends.html', script: 'trends', name: 'Trends', icon: 'trends', group: 'Evidence',
@@ -76,7 +76,7 @@ const PAGES = [
     title: 'Sources and coverage', note: 'What this board reads, when it was read, and what it cannot see.',
     description: 'What this board reads and what it cannot see.' },
   { file: 'rules.html', script: 'rules', name: 'Reading rules', icon: 'rules', group: 'Evidence',
-    title: 'Reading rules', note: 'How every figure on this board is counted, and what each one will not prove.',
+    title: 'Reading rules', note: 'How each figure is counted, and what it will not prove.',
     description: 'How each figure on this board is counted.' },
 
   { file: 'components.html', script: 'components', name: 'Components', icon: 'components', group: 'The kit',
@@ -84,7 +84,7 @@ const PAGES = [
     description: 'Every chart, control and state the kit ships.' },
 
   { file: 'data.html', script: 'data', name: 'Your data', icon: 'data', group: 'The kit',
-    title: 'Your data', note: 'What this board is reading, and how to point it at your own rows instead.',
+    title: 'Your data', note: 'What this board is reading, and how to give it your own rows.',
     description: 'Point the board at your own rows.' }
 ];
 
@@ -106,17 +106,23 @@ function menu(current) {
   return lines.join('\n');
 }
 
+// The filter row. The period, the product and the search are what people change, so
+// they stay on the row; the person and the saved views sit behind More filters, which
+// opens by itself when one of them is set (moreFilters() in shared/app.js).
 function filters(withoutRange) {
   const range = withoutRange ? '' : `          <div class="segmented segmented-three" id="range-picker" role="group" aria-label="Period"></div>
 `;
   return `        <div class="controls">
 ${range}          <label class="sr-only" for="product-filter">Product</label>
           <select class="select" id="product-filter"></select>
-          <label class="sr-only" for="person-filter">Person</label>
-          <select class="select" id="person-filter"></select>
           <label class="sr-only" for="row-search">Search the requests</label>
           <input class="search" id="row-search" type="search" placeholder="Search a person, a product or a request" autocomplete="off">
-          <div class="views" id="saved-views"></div>
+          <button class="button button-secondary button-inline more-filters" id="more-filters" type="button" aria-expanded="false" aria-controls="more-filter-set">More filters</button>
+          <div class="more-filter-set" id="more-filter-set" hidden>
+            <label class="sr-only" for="person-filter">Person</label>
+            <select class="select" id="person-filter"></select>
+            <div class="views" id="saved-views"></div>
+          </div>
           <button class="button button-secondary button-inline" id="filters-clear" type="button" hidden>Show everything</button>
         </div>`;
 }
@@ -204,13 +210,12 @@ const BODIES = {
 
 ${filters()}
 
-        <p class="panel-note" id="filter-note"></p>
+        <p class="panel-note" id="filter-note" hidden></p>
 
         <div class="grid">
           <section class="panel span-7" aria-labelledby="waiting-title">
             <div class="panel-head">
               <h2 id="waiting-title">How long requests have been waiting</h2>
-              <a class="text-link" href="requests.html">Open the waiting list</a>
             </div>
             <div id="waiting-chart"></div>
             <p class="panel-note">Counted from the day the request arrived to today, for requests with nothing recorded against them.</p>
@@ -228,7 +233,6 @@ ${filters()}
           <section class="panel span-7" aria-labelledby="arrivals-title">
             <div class="panel-head">
               <h2 id="arrivals-title">Requests arriving by day</h2>
-              <a class="text-link" href="trends.html">Open the trends</a>
             </div>
             <div id="arrivals-chart"></div>
             <p class="panel-note">Every request the board holds, counted on the day it came in. The last thirty days, whatever period is chosen above.</p>
@@ -242,11 +246,22 @@ ${filters()}
             <div id="notes-chart"></div>
             <p class="panel-note">Measured on length alone: whether the next person could pick the request up. Nothing here judges the work.</p>
           </section>
+
+          <section class="panel span-12" aria-labelledby="weeks-title">
+            <div class="panel-head">
+              <h2 id="weeks-title">The last six weeks</h2>
+              <a class="text-link" href="trends.html">Open the trends</a>
+            </div>
+            <div class="table-wrap">
+              <table class="results" id="weeks-table"></table>
+            </div>
+            <p class="panel-note">Every request the board holds, week by week, whatever is chosen above.</p>
+          </section>
         </div>`,
 
   requests: `${filters(true)}
 
-        <p class="panel-note" id="filter-note"></p>
+        <p class="panel-note" id="filter-note" hidden></p>
 
         <section class="open-section" aria-labelledby="band-grid-title">
           <h2 class="sr-only" id="band-grid-title">Choose how long they have waited</h2>
@@ -265,7 +280,7 @@ ${filters()}
 
   notes: `${filters()}
 
-        <p class="panel-note" id="filter-note"></p>
+        <p class="panel-note" id="filter-note" hidden></p>
 
         <section class="open-section" aria-labelledby="grade-grid-title">
           <h2 class="sr-only" id="grade-grid-title">Choose how much the note says</h2>
@@ -284,9 +299,7 @@ ${filters()}
 
   channels: `${filters()}
 
-        <p class="panel-note" id="filter-note"></p>
-
-        <section class="tiles" id="tiles" aria-label="Channels"></section>
+        <p class="panel-note" id="filter-note" hidden></p>
 
         <div class="grid">
           <section class="panel span-7" aria-labelledby="compare-title">
@@ -312,13 +325,13 @@ ${filters()}
             <div class="table-wrap">
               <table class="results" id="channel-table"></table>
             </div>
-            <p class="panel-note">A channel with nothing in this selection is left out rather than shown as a zero.</p>
+            <p class="panel-note">Change is against the same length of time just before. A channel with nothing in this selection is left out rather than shown as a zero.</p>
           </section>
         </div>`,
 
   team: `${filters(true)}
 
-        <p class="panel-note" id="filter-note"></p>
+        <p class="panel-note" id="filter-note" hidden></p>
 
         <section class="tiles tiles-four" id="tiles" aria-label="Totals"></section>
 
