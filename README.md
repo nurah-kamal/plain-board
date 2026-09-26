@@ -56,6 +56,25 @@ The demo ships with 129 invented requests. To put your own in front of it, open 
 
 For anything that is not a file, replace `BoardData.load()` in `assets/js/shared/loading.js` and nothing else changes. Every page already goes through waiting, ready and failed — see them on any page with `?state=loading` or `?state=failed`.
 
+## Your own line on a figure
+
+Every tile carries an (i) explaining what it counts. Inside it, **Watch this figure for me**
+draws your own line: above or below a number you choose. When the figure crosses it, the
+tile says so — *past your line, above 8 hours* — beside the board's own movement chip.
+
+- **It is a line, not an alert.** Nothing is sent. There is no server to send it, so a
+  line shows when you open the board and at no other time. The board says this every
+  time you set one rather than letting the word "alert" imply otherwise.
+- **The board's rules and yours are kept apart.** The banner says what needs somebody
+  according to rules the board was built with. A line is yours. They are never merged,
+  so you can always tell which is which.
+- **Where the board knows which direction is worth having**, the control opens on that
+  side. Where it does not — volume, headcount — it suggests nothing, for the same
+  reason the movement chip stays neutral on those figures.
+- **A figure the board could not read is never past a line.** A dash is not a number.
+
+Lines live in that browser, like saved views.
+
 ## Saved views
 
 A selection worth coming back to can be named and kept: the picker at the end of the filter bar, and one button that says either **Save this view** or **Remove this view**, depending on whether what is on screen is already saved.

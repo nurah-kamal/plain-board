@@ -59,6 +59,8 @@ function showTiles(rows) {
     {
       label: 'Requests',
       value: formatNumber(rows.length),
+      // No better direction: the reader picks the side they care about.
+      watch: { value: rows.length, unit: 'requests', better: null },
       // More requests arriving is not better or worse, it is busier, so the chip
       // states the move and stops there.
       change: comparable ? movement(rows.length, before.length, { good: null, suffix: since }) : null,
@@ -70,6 +72,7 @@ function showTiles(rows) {
     {
       label: 'Answered within a day',
       value: shareNow === null ? '—' : `${shareNow}%`,
+      watch: { value: shareNow, unit: 'per cent', better: 'above' },
       change: comparable && shareNow !== null && shareBefore !== null
         ? movement(shareNow, shareBefore, { good: 'up', suffix: since })
         : null,
@@ -81,6 +84,7 @@ function showTiles(rows) {
     {
       label: 'Nothing recorded',
       value: formatNumber(waiting.length),
+      watch: { value: waiting.length, unit: 'requests', better: 'below' },
       change: comparable ? movement(waiting.length, unanswered(before).length, { good: 'down', suffix: since }) : null,
       note: waiting.length ? `longest has waited ${waitingWords(Math.max(...waiting.map((request) => request.days))).toLowerCase()}` : 'everything has a reply recorded',
       spark: TRENDS.waiting,
@@ -90,6 +94,7 @@ function showTiles(rows) {
     {
       label: 'Hours to first reply',
       value: middle === null ? '—' : formatHours(middle),
+      watch: { value: middle, unit: 'hours', better: 'below' },
       change: comparable && middle !== null && beforeMiddle !== null
         ? movement(middle, beforeMiddle, { good: 'down', suffix: since })
         : null,
@@ -146,6 +151,11 @@ function showNotes(rows) {
     return;
   }
   holder.replaceChildren(barList(bars));
+}
+
+// Drawing or removing a line changes what the tiles say, so the tiles are drawn again.
+function redrawTiles() {
+  showTiles(currentRows());
 }
 
 function render() {

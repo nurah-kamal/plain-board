@@ -182,6 +182,7 @@ ${body}
   <script src="../assets/js/shared/data.js"></script>
   <script src="../assets/js/shared/board.js"></script>
   <script src="../assets/js/shared/app.js"></script>
+  <script src="../assets/js/shared/lines.js"></script>
   <script src="../assets/js/shared/charts.js"></script>
   <script src="../assets/js/shared/filters.js"></script>
   <script src="../assets/js/shared/views.js"></script>
