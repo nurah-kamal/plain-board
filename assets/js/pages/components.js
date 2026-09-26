@@ -94,7 +94,7 @@ fill('chart-list', [
 // ---------- figures ----------
 
 fill('tile-list', [
-  demo('Figure tile', 'A number, what it is, the run behind it, and an (i) saying what it does not prove.',
+  demo('Figure tile', 'A number, what it is, the run behind it, and an (i) saying what it does not prove. Every tile on every page carries one — tools/check-tiles.js will not let the pages build otherwise.',
     (() => {
       const holder = create('div', 'tiles');
       holder.append(
@@ -109,16 +109,18 @@ fill('tile-list', [
           label: 'Nothing recorded',
           value: '23', note: 'longest has waited 72 days',
           change: { direction: 'down', tone: 'well', text: '9% on the previous 4 weeks' },
-          spark: [14, 11, 16, 12, 10, 8], sparkLabel: 'Six weeks'
+          spark: [14, 11, 16, 12, 10, 8], sparkLabel: 'Six weeks',
+          about: 'Requests with no reply written against them. It does not prove nobody replied — only that nobody wrote it down.'
         }),
         statTile({
           label: 'Hours to first reply',
-          value: '4h', note: 'the middle value, not the average'
+          value: '4h', note: 'the middle value, not the average',
+          about: 'The middle value, so one very old request cannot drag it. Only requests carrying a recorded reply can be measured at all.'
         })
       );
       return holder;
     })(),
-    "statTile({\n  label, value, note, icon, tone,   // tone: is-info | is-good | is-warn\n  change,                            // a statusChip shape\n  spark, sparkLabel, sparkMark,\n  about                              // shows the (i)\n})"),
+    "statTile({\n  label, value, note,\n  change,                     // a statusChip shape\n  spark, sparkLabel, sparkMark,\n  about,                      // shows the (i). Required: the build checks for it\n  watch                       // { value, unit, better } — lets a reader draw a line\n})"),
 
   demo('Status chip', 'A state, in words as well as colour, so the colour is never the only carrier.',
     (() => {

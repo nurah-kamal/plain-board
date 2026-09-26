@@ -29,7 +29,7 @@ Twelve pages, grouped by the question each one answers.
 
 Most boards overclaim. This one is built not to, and the rules are in the product rather than in a document:
 
-- **A figure says what it does not prove.** Every tile carries an (i) with its counting rule and its limit. A tile without one is not finished.
+- **A figure says what it does not prove.** Every tile carries an (i) with its counting rule and its limit. A tile without one is not finished — `tools/check-tiles.js` runs inside the build and the stamp step, and refuses to let a page ship without it.
 - **Blank is not proof.** A row with nothing recorded means nobody wrote anything down — not that nothing happened. Every figure that counts blanks says so beside itself.
 - **A comparison refuses itself** when there is no honest period behind it, rather than comparing against a shorter, unfair stretch.
 - **A percentage is not printed off a base too small to support it.** Two requests becoming eight is not a 300% improvement, it is six requests — so the chip reads `2 to 8`.

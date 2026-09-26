@@ -82,7 +82,7 @@ Pills (`999px`) are for chips and counts only; `50%` is for avatars. Nothing els
 
 These are design decisions, not missing work. They are the reason the kit exists.
 
-- **A figure says what it does not prove.** Every tile carries an (i) with the counting rule and the limit. A tile without one is not finished.
+- **A figure says what it does not prove.** Every tile carries an (i) with the counting rule and the limit. A tile without one is not finished. `tools/check-tiles.js` enforces it: it reads every `statTile` call on every page, and exits non-zero naming the file, the line and the label of any tile with a figure and no `about`.
 - **Blank is not proof.** A row with nothing recorded means nobody wrote anything down — not that nothing happened. Every figure that counts blanks says so beside itself.
 - **Keep separate things separate.** Supply, speed and quality are three measures. Averaging them into one score produces a number that means nothing.
 - **Use the middle value, not the average,** wherever one very old row could drag it.

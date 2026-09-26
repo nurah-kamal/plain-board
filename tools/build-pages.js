@@ -6,10 +6,14 @@
 //
 //   node tools/build-pages.js
 //
+// It refuses to build if any tile carries a figure without an (i) saying what that
+// figure does not prove — see tools/check-tiles.js.
+//
 // Then run tools/stamp-assets.js before committing.
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const root = path.join(__dirname, '..');
 
@@ -503,6 +507,16 @@ ${filters()}
           <ul class="gap-list" id="choice-list"></ul>
         </section>`
 };
+
+// Before anything is written: every tile has to be able to say what it does not prove.
+// The check exits non-zero and names the tile, so a page is never built around a figure
+// with no caveat on it.
+try {
+  execFileSync(process.execPath, [path.join(__dirname, 'check-tiles.js')], { stdio: 'inherit' });
+} catch (error) {
+  console.error('Nothing was built.');
+  process.exit(1);
+}
 
 PAGES.forEach((page) => {
   const body = BODIES[page.script];
